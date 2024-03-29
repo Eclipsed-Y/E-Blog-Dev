@@ -9,4 +9,6 @@ import javax.security.auth.login.LoginException;
 
 public interface UserService extends IService<UserDO> {
     UserVO login(UserDTO user) throws LoginException;
+
+    void changePassword(String oldPassword, String newPassword);
 }

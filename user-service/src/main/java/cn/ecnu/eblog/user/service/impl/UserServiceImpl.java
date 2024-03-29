@@ -2,6 +2,8 @@ package cn.ecnu.eblog.user.service.impl;
 
 import cn.ecnu.eblog.common.constant.JwtClaimsConstant;
 import cn.ecnu.eblog.common.constant.MessageConstant;
+import cn.ecnu.eblog.common.context.BaseContext;
+import cn.ecnu.eblog.common.exception.PasswordErrorException;
 import cn.ecnu.eblog.common.pojo.dto.UserDTO;
 import cn.ecnu.eblog.common.pojo.entity.user.UserDO;
 import cn.ecnu.eblog.common.pojo.vo.UserVO;
@@ -61,5 +63,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
                 .username(userDO.getUsername())
                 .token(token)
                 .build();
+    }
+
+    @Override
+    public void changePassword(String oldPassword, String newPassword) {
+        UserDO userDO = userMapper.selectById(BaseContext.getCurrentId());
+        if (!passwordUtil.match(oldPassword, userDO.getPassword())){
+            throw new PasswordErrorException(MessageConstant.PASSWORD_ERROR);
+        }
+        userDO.setPassword(passwordUtil.encPwd(newPassword));
+        userMapper.updateById(userDO);
     }
 }

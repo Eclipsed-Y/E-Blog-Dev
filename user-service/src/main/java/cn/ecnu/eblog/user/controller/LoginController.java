@@ -2,6 +2,7 @@ package cn.ecnu.eblog.user.controller;
 
 import cn.ecnu.eblog.common.annotation.RunningTime;
 import cn.ecnu.eblog.common.context.BaseContext;
+import cn.ecnu.eblog.common.pojo.dto.PasswordDTO;
 import cn.ecnu.eblog.common.pojo.dto.UserDTO;
 import cn.ecnu.eblog.common.pojo.entity.user.UserDO;
 import cn.ecnu.eblog.common.pojo.result.Result;
@@ -14,10 +15,8 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
 import javax.security.auth.login.LoginException;
 
 
@@ -58,5 +57,13 @@ public class LoginController {
     public Result logout(){
         redisTemplate.delete("token:" + BaseContext.getCurrentId());
         return Result.success();
+    }
+
+    @ApiOperation("修改密码")
+    @PutMapping("/password")
+    @RunningTime
+    public Result changePassword(@RequestBody PasswordDTO passwordDTO){
+        userService.changePassword(passwordDTO.getOldPassword(), passwordDTO.getNewPassword());
+        return logout();
     }
 }
