@@ -1,0 +1,23 @@
+server:
+  port: 8080
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/eblog
+    username: root
+    password: 123456
+  mvc:
+    pathmatch:
+      # Springfox使用的路径匹配是基于AntPathMatcher的，而Spring Boot 2.6.X使用的是PathPatternMatcher
+      # 所以需要配置此参数
+      matching-strategy: ant_path_matcher
+eblog:
+  jwt:
+    # 设置jwt签名加密时使用的秘钥
+    user-secret-key: akiey
+    # 设置jwt过期时间24小时
+    user-ttl: 86400000
+    # 设置前端传递过来的令牌名称
+    user-token-name: token
