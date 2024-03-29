@@ -9,8 +9,6 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserVO {
-    private Long id;
-    private String username;
-    private String token;
+public class UserInfoVO {
+
 }

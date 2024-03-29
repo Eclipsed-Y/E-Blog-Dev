@@ -10,8 +10,6 @@ import cn.ecnu.eblog.common.utils.AutoFillUtil;
 import cn.ecnu.eblog.user.properties.JwtProperties;
 import cn.ecnu.eblog.user.service.UserService;
 import cn.ecnu.eblog.user.utils.PasswordUtil;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -22,7 +20,6 @@ import javax.security.auth.login.LoginException;
 
 @RequestMapping("/user")
 @RestController
-@Api(tags = "登录模块")
 public class LoginController {
     @Autowired
     private UserService userService;
@@ -32,7 +29,6 @@ public class LoginController {
     private RedisTemplate<String, Object> redisTemplate;
     @Autowired
     private JwtProperties jwtProperties;
-    @ApiOperation("注册接口")
     @PostMapping("/signup")
     @RunningTime
     public Result signup(@RequestBody UserDTO user){
@@ -44,14 +40,12 @@ public class LoginController {
         return Result.success();
     }
 
-    @ApiOperation("登录接口")
     @PostMapping("/login")
     @RunningTime
     public Result login(@RequestBody UserDTO user) throws LoginException {
         return Result.success(userService.login(user));
     }
 
-    @ApiOperation("退出登录接口")
     @PostMapping("/logout")
     @RunningTime
     public Result logout(){
@@ -59,7 +53,6 @@ public class LoginController {
         return Result.success();
     }
 
-    @ApiOperation("修改密码")
     @PutMapping("/password")
     @RunningTime
     public Result changePassword(@RequestBody PasswordDTO passwordDTO){
