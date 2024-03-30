@@ -13,6 +13,10 @@ spring:
           uri: lb://user-service  # 路由目标地址， lb代表负载均衡
           predicates:  # 路由条件，也就是只有满足条件的请求才会被路由到目标地址
             - Path=/user/**
+        - id: upload-service  # 路由id
+          uri: lb://upload-service  # 路由目标地址， lb代表负载均衡
+          predicates: # 路由条件，也就是只有满足条件的请求才会被路由到目标地址
+            - Path=/upload/**
 #        - id: order-service
 #          uri: lb://order-service
 #          predicates:
@@ -36,3 +40,11 @@ spring:
             allowedHeaders: "*" # 允许在请求中携带的头信息
             allowCredentials: true # 是否允许携带cookie
             maxAge: 360000 # 这次跨域检测的有效期
+eblog:
+  jwt:
+    # 设置jwt签名加密时使用的秘钥
+    user-secret-key: akiey
+    # 设置jwt过期时间24小时
+    user-ttl: 86400000
+    # 设置前端传递过来的令牌名称
+    user-token-name: token

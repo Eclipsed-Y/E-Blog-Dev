@@ -9,7 +9,7 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>gateway</artifactId>
+    <artifactId>article-service</artifactId>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -18,15 +18,10 @@
     </properties>
     <dependencies>
         <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-gateway</artifactId>
-        </dependency>
-        <dependency>
             <groupId>cn.ecnu.eblog</groupId>
             <artifactId>eblog-common</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
-
 
 </project>

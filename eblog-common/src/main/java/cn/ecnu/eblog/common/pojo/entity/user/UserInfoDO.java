@@ -5,13 +5,14 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-
 @Data
 @EqualsAndHashCode(callSuper = true)
-@TableName("user")
-public class UserDO extends BaseDO {
-
-    private static final long serialVersionUID = 1L;
-    private String username;
-    private String password;
+@TableName("user_info")
+public class UserInfoDO extends BaseDO {
+    private Long userId;
+    private String nickname;
+    private String avatar;
+    private String position;
+    private String profile;
+    private String role;
 }

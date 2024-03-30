@@ -1,0 +1,6 @@
+server:
+  port: 8081
+aliyun:
+  oss:
+    endpoint: https://oss-cn-shanghai.aliyuncs.com
+    bucket-name: akiey

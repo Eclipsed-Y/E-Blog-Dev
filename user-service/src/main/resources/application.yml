@@ -8,11 +8,6 @@ spring:
     url: jdbc:mysql://localhost:3306/eblog
     username: root
     password: 123456
-  mvc:
-    pathmatch:
-      # Springfox使用的路径匹配是基于AntPathMatcher的，而Spring Boot 2.6.X使用的是PathPatternMatcher
-      # 所以需要配置此参数
-      matching-strategy: ant_path_matcher
 eblog:
   jwt:
     # 设置jwt签名加密时使用的秘钥
