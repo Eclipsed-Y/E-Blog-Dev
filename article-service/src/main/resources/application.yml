@@ -1,0 +1,10 @@
+server:
+  port: 8082
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/eblog
+    username: root
+    password: 123456

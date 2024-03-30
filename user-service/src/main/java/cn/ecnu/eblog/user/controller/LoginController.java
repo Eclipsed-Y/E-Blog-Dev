@@ -10,6 +10,7 @@ import cn.ecnu.eblog.common.pojo.result.Result;
 import cn.ecnu.eblog.user.service.UserInfoService;
 import cn.ecnu.eblog.user.service.UserService;
 import cn.ecnu.eblog.user.utils.PasswordUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -20,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.security.auth.login.LoginException;
 
-
+@Slf4j
 @RequestMapping("/user")
 @RestController
 public class LoginController {
@@ -37,6 +38,7 @@ public class LoginController {
     @PostMapping("/signup")
     @RunningTime
     public Result<?> signup(@RequestBody UserDTO user){
+        log.info("用户注册: {}", user.getUsername());
         UserDO userDO = new UserDO();
         UserInfoDO userInfoDO = new UserInfoDO();
         BeanUtils.copyProperties(user, userDO);
@@ -59,12 +61,14 @@ public class LoginController {
     @PostMapping("/login")
     @RunningTime
     public Result<?> login(@RequestBody UserDTO user) {
+        log.info("用户登录: {}", user.getUsername());
         return Result.success(userService.login(user));
     }
 
     @PostMapping("/logout")
     @RunningTime
     public Result<?> logout(){
+        log.info("id: {}用户退出", BaseContext.getCurrentId());
         redisTemplate.delete("token:" + BaseContext.getCurrentId());
         return Result.success();
     }
@@ -72,6 +76,7 @@ public class LoginController {
     @PutMapping("/password")
     @RunningTime
     public Result<?> changePassword(@RequestBody PasswordDTO passwordDTO){
+        log.info("id: {}用户修改密码", BaseContext.getCurrentId());
         userService.changePassword(passwordDTO.getOldPassword(), passwordDTO.getNewPassword());
         return logout();
     }

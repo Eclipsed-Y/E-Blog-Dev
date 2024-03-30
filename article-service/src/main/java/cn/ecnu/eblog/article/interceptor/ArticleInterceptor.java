@@ -1,4 +1,4 @@
-package cn.ecnu.eblog.user.interceptor;
+package cn.ecnu.eblog.article.interceptor;
 
 import cn.ecnu.eblog.common.context.BaseContext;
 import lombok.extern.slf4j.Slf4j;
@@ -10,11 +10,9 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
 @Component
 @Slf4j
-public class UserInterceptor implements HandlerInterceptor {
-
+public class ArticleInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         //判断当前拦截到的是Controller的方法还是其他资源
         if (!(handler instanceof HandlerMethod)) {

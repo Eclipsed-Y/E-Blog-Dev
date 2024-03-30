@@ -9,10 +9,12 @@ import cn.ecnu.eblog.common.pojo.vo.UserInfoVO;
 import cn.ecnu.eblog.user.service.UserInfoService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @RestController
 @RequestMapping("user")
 public class UserInfoController {
@@ -26,6 +28,7 @@ public class UserInfoController {
      */
     @GetMapping("/{id}")
     public Result<UserInfoVO> getUserInfo(@PathVariable Long id){
+        log.info("获取id: {}用户信息", BaseContext.getCurrentId());
         UserInfoDO userInfoDO = userInfoService.getById(id);
         UserInfoVO userInfoVO = new UserInfoVO();
         BeanUtils.copyProperties(userInfoDO, userInfoVO);
@@ -39,6 +42,7 @@ public class UserInfoController {
      */
     @PutMapping("/update")
     public Result<?> updateInfo(@RequestBody UserInfoDTO userInfoDTO){
+        log.info("更新id: {}用户信息", BaseContext.getCurrentId());
         UserInfoDO userInfoDO = new UserInfoDO();
         BeanUtils.copyProperties(userInfoDTO, userInfoDO);
         userInfoDO.setUserId(BaseContext.getCurrentId());
