@@ -7,10 +7,10 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-@TableName("article_detail")
+@TableName("tag")
 public class TagDO extends BaseDO {
     private static final long serialVersionUID = 1L;
     private String tagName;
     private Short status;
-    private Short rank;
+    private Short sort;
 }

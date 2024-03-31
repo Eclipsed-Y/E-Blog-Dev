@@ -36,7 +36,6 @@ public class LoginController {
     @Autowired
     private TransactionTemplate transactionTemplate;
     @PostMapping("/signup")
-    @RunningTime
     public Result<?> signup(@RequestBody UserDTO user){
         log.info("用户注册: {}", user.getUsername());
         UserDO userDO = new UserDO();
@@ -59,24 +58,21 @@ public class LoginController {
     }
 
     @PostMapping("/login")
-    @RunningTime
     public Result<?> login(@RequestBody UserDTO user) {
         log.info("用户登录: {}", user.getUsername());
         return Result.success(userService.login(user));
     }
 
     @PostMapping("/logout")
-    @RunningTime
     public Result<?> logout(){
-        log.info("id: {}用户退出", BaseContext.getCurrentId());
+        log.info("id: {} 用户退出", BaseContext.getCurrentId());
         redisTemplate.delete("token:" + BaseContext.getCurrentId());
         return Result.success();
     }
 
     @PutMapping("/password")
-    @RunningTime
     public Result<?> changePassword(@RequestBody PasswordDTO passwordDTO){
-        log.info("id: {}用户修改密码", BaseContext.getCurrentId());
+        log.info("id: {} 用户修改密码", BaseContext.getCurrentId());
         userService.changePassword(passwordDTO.getOldPassword(), passwordDTO.getNewPassword());
         return logout();
     }

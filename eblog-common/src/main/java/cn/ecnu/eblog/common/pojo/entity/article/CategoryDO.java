@@ -13,5 +13,5 @@ public class CategoryDO extends BaseDO {
     private static final long serialVersionUID = 1L;
     private String categoryName;
     private Short status;
-    private Short rank;
+    private Short sort;
 }

@@ -1,8 +1,8 @@
 package cn.ecnu.eblog.article.service;
 
-import cn.ecnu.eblog.common.pojo.entity.article.ArticleDO;
+import cn.ecnu.eblog.common.pojo.entity.article.TagDO;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.github.yulichang.base.MPJBaseService;
 
-public interface ArticleService extends MPJBaseService<ArticleDO> {
+public interface TagService extends MPJBaseService<TagDO> {
 }

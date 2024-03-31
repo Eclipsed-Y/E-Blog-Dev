@@ -1,4 +1,4 @@
-package cn.ecnu.eblog.gateway;
+package cn.ecnu.eblog.gateway.config;
 
 
 import cn.ecnu.eblog.common.constant.JwtClaimsConstant;

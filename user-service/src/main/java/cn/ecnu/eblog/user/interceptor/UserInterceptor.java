@@ -24,7 +24,7 @@ public class UserInterceptor implements HandlerInterceptor {
 
         try {
             String id = request.getHeader("userId");
-            log.info("当前用户id:{}", id);
+            log.info("当前用户id: {}", id);
             BaseContext.setCurrentId(Long.valueOf(id));
             return true;
         } catch (Exception e) {

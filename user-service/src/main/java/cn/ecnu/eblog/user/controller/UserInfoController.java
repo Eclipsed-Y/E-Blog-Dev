@@ -1,6 +1,8 @@
 package cn.ecnu.eblog.user.controller;
 
+import cn.ecnu.eblog.common.constant.MessageConstant;
 import cn.ecnu.eblog.common.context.BaseContext;
+import cn.ecnu.eblog.common.exception.AccountNotFoundException;
 import cn.ecnu.eblog.common.pojo.dto.UserInfoDTO;
 import cn.ecnu.eblog.common.pojo.entity.BaseDO;
 import cn.ecnu.eblog.common.pojo.entity.user.UserInfoDO;
@@ -28,8 +30,11 @@ public class UserInfoController {
      */
     @GetMapping("/{id}")
     public Result<UserInfoVO> getUserInfo(@PathVariable Long id){
-        log.info("获取id: {}用户信息", BaseContext.getCurrentId());
+        log.info("获取id: {} 用户信息", id);
         UserInfoDO userInfoDO = userInfoService.getById(id);
+        if (userInfoDO == null || userInfoDO.getDeleted() == 1){
+            throw new AccountNotFoundException(MessageConstant.ACCOUNT_NOT_FOUND);
+        }
         UserInfoVO userInfoVO = new UserInfoVO();
         BeanUtils.copyProperties(userInfoDO, userInfoVO);
         return Result.success(userInfoVO);
@@ -42,7 +47,7 @@ public class UserInfoController {
      */
     @PutMapping("/update")
     public Result<?> updateInfo(@RequestBody UserInfoDTO userInfoDTO){
-        log.info("更新id: {}用户信息", BaseContext.getCurrentId());
+        log.info("更新id: {} 用户信息", BaseContext.getCurrentId());
         UserInfoDO userInfoDO = new UserInfoDO();
         BeanUtils.copyProperties(userInfoDTO, userInfoDO);
         userInfoDO.setUserId(BaseContext.getCurrentId());

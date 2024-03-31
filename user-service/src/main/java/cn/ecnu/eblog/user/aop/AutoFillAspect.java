@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class AutoFillAspect {
 
-    @Pointcut("execution(* cn.ecnu.eblog.user.controller.*.*(..)) && @annotation(cn.ecnu.eblog.common.annotation.RunningTime)")
+    @Pointcut("execution(* cn.ecnu.eblog.user.controller.*.*(..))")
     private void exec() {
     }
 

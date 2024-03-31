@@ -20,7 +20,7 @@ spring:
         - id: article-service  # 路由id
           uri: lb://article-service  # 路由目标地址， lb代表负载均衡
           predicates: # 路由条件，也就是只有满足条件的请求才会被路由到目标地址
-            - Path=/article/**
+            - Path=/category/**,/tag/**,/article/**
 #        - id: order-service
 #          uri: lb://order-service
 #          predicates:
@@ -35,6 +35,7 @@ spring:
           '[/**]':
             allowedOrigins: # 允许哪些网站的跨域请求
               - "http://127.0.0.1:8080"
+              - "http://127.0.0.1:8000"
             allowedMethods: # 允许的跨域ajax的请求方式
               - "GET"
               - "POST"
