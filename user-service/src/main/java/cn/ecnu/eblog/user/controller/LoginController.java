@@ -28,32 +28,12 @@ public class LoginController {
     @Autowired
     private UserService userService;
     @Autowired
-    private UserInfoService userInfoService;
-    @Autowired
-    private PasswordUtil passwordUtil;
-    @Autowired
     private RedisTemplate<String, Object> redisTemplate;
-    @Autowired
-    private TransactionTemplate transactionTemplate;
+
     @PostMapping("/signup")
     public Result<?> signup(@RequestBody UserDTO user){
         log.info("用户注册: {}", user.getUsername());
-        UserDO userDO = new UserDO();
-        UserInfoDO userInfoDO = new UserInfoDO();
-        BeanUtils.copyProperties(user, userDO);
-        BeanUtils.copyProperties(user, userInfoDO);
-        userDO.setPassword(passwordUtil.encPwd(userDO.getPassword()));  // 加盐后md5加密
-
-        transactionTemplate.execute(new TransactionCallback<Object>() {
-            @Override
-            public Object doInTransaction(TransactionStatus transactionStatus) {
-                userService.save(userDO);
-                userInfoDO.setUserId(userDO.getId());
-                userInfoService.save(userInfoDO);
-                return null;
-            }
-        });
-
+        userService.signup(user);
         return Result.success();
     }
 

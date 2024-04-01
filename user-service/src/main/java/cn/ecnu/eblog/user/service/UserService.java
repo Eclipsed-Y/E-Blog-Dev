@@ -11,4 +11,6 @@ public interface UserService extends IService<UserDO> {
     UserVO login(UserDTO user);
 
     void changePassword(String oldPassword, String newPassword);
+
+    void signup(UserDTO user);
 }

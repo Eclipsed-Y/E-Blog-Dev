@@ -111,6 +111,7 @@ public class ArticleController {
             articleVO.setTags(list);
             articleVOS.add(articleVO);
         }
+
         return Result.success(new PageResult(articleViewDOPage.getTotal(), articleVOS));
     }
 

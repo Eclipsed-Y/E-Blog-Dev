@@ -7,17 +7,23 @@ import cn.ecnu.eblog.common.exception.LoginFailedException;
 import cn.ecnu.eblog.common.exception.PasswordErrorException;
 import cn.ecnu.eblog.common.pojo.dto.UserDTO;
 import cn.ecnu.eblog.common.pojo.entity.user.UserDO;
+import cn.ecnu.eblog.common.pojo.entity.user.UserInfoDO;
 import cn.ecnu.eblog.common.pojo.vo.UserVO;
 import cn.ecnu.eblog.common.utils.JwtUtil;
 import cn.ecnu.eblog.user.mapper.UserMapper;
 import cn.ecnu.eblog.user.properties.JwtProperties;
+import cn.ecnu.eblog.user.service.UserInfoService;
 import cn.ecnu.eblog.user.service.UserService;
 import cn.ecnu.eblog.user.utils.PasswordUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.TransactionCallback;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import javax.security.auth.login.LoginException;
 import java.util.HashMap;
@@ -35,6 +41,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
     private JwtProperties jwtProperties;
     @Autowired
     private RedisTemplate<String, Object> redisTemplate;
+    @Autowired
+    private TransactionTemplate transactionTemplate;
+    @Autowired
+    private UserInfoService userInfoService;
 
     @Override
     public UserVO login(UserDTO user) {
@@ -74,5 +84,24 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
         }
         userDO.setPassword(passwordUtil.encPwd(newPassword));
         userMapper.updateById(userDO);
+    }
+
+    @Override
+    public void signup(UserDTO user) {
+        UserDO userDO = new UserDO();
+        UserInfoDO userInfoDO = new UserInfoDO();
+        BeanUtils.copyProperties(user, userDO);
+        BeanUtils.copyProperties(user, userInfoDO);
+        userDO.setPassword(passwordUtil.encPwd(userDO.getPassword()));  // 加盐后md5加密
+
+        transactionTemplate.execute(new TransactionCallback<Object>() {
+            @Override
+            public Object doInTransaction(TransactionStatus transactionStatus) {
+                userMapper.insert(userDO);
+                userInfoDO.setUserId(userDO.getId());
+                userInfoService.save(userInfoDO);
+                return null;
+            }
+        });
     }
 }
