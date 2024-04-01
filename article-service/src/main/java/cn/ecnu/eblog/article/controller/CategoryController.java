@@ -29,19 +29,7 @@ public class CategoryController {
     @GetMapping("/list")
     public Result<List<CategoryVO>> getAllCategories(){
         log.info("id: {} 用户获取所有分类", BaseContext.getCurrentId());
-        QueryWrapper<CategoryDO> wrapper = new QueryWrapper<>();
-        // 未删除且已发布
-        wrapper.eq("deleted", 0).eq("status", 1);
-        wrapper.orderByAsc("sort");
-        List<CategoryDO> categoryDOS = categoryService.list(wrapper);
-        List<CategoryVO> categoryVOS = new ArrayList<>();
-        for (CategoryDO categoryDO : categoryDOS) {
-            CategoryVO categoryVO = CategoryVO.builder()
-                    .id(categoryDO.getId())
-                    .categoryName(categoryDO.getCategoryName())
-                    .build();
-            categoryVOS.add(categoryVO);
-        }
+        List<CategoryVO> categoryVOS = categoryService.getAllCategories();
         return Result.success(categoryVOS);
     }
 }

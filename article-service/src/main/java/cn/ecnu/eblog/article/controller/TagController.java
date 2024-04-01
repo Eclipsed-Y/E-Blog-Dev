@@ -29,19 +29,7 @@ public class TagController {
     @GetMapping("/list")
     public Result<List<TagVO>> getAllTags(){
         log.info("id: {} 用户获取所有tag", BaseContext.getCurrentId());
-        QueryWrapper<TagDO> wrapper = new QueryWrapper<>();
-        // 未删除且已发布
-        wrapper.eq("deleted", 0).eq("status", 1);
-        wrapper.orderByAsc("sort");
-        List<TagDO> tagDOS = tagService.list(wrapper);
-        List<TagVO> tagVOS = new ArrayList<>();
-        for (TagDO tagDO : tagDOS) {
-            TagVO tagVO = TagVO.builder()
-                    .id(tagDO.getId())
-                    .tagName(tagDO.getTagName())
-                    .build();
-            tagVOS.add(tagVO);
-        }
+        List<TagVO> tagVOS = tagService.getAllTags();
         return Result.success(tagVOS);
     }
 }

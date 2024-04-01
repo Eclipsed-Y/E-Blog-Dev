@@ -31,12 +31,7 @@ public class UserInfoController {
     @GetMapping("/{id}")
     public Result<UserInfoVO> getUserInfo(@PathVariable Long id){
         log.info("获取id: {} 用户信息", id);
-        UserInfoDO userInfoDO = userInfoService.getById(id);
-        if (userInfoDO == null || userInfoDO.getDeleted() == 1){
-            throw new AccountNotFoundException(MessageConstant.ACCOUNT_NOT_FOUND);
-        }
-        UserInfoVO userInfoVO = new UserInfoVO();
-        BeanUtils.copyProperties(userInfoDO, userInfoVO);
+        UserInfoVO userInfoVO = userInfoService.getUserInfo(id);
         return Result.success(userInfoVO);
     }
 
@@ -48,28 +43,7 @@ public class UserInfoController {
     @PutMapping("/update")
     public Result<?> updateInfo(@RequestBody UserInfoDTO userInfoDTO){
         log.info("更新id: {} 用户信息", BaseContext.getCurrentId());
-        UserInfoDO userInfoDO = new UserInfoDO();
-        BeanUtils.copyProperties(userInfoDTO, userInfoDO);
-        userInfoDO.setUserId(BaseContext.getCurrentId());
-        UpdateWrapper<UserInfoDO> wrapper = new UpdateWrapper<>();
-
-        wrapper.eq("user_id", userInfoDO.getUserId());
-        if (userInfoDO.getNickname() != null) {
-            wrapper.set("nickname", userInfoDO.getNickname());
-        }
-        if (userInfoDO.getProfile() != null) {
-            wrapper.set("profile", userInfoDO.getProfile());
-        }
-        if (userInfoDO.getAvatar() != null) {
-            wrapper.set("avatar", userInfoDO.getAvatar());
-        }
-        if (userInfoDO.getPosition() != null) {
-            wrapper.set("position", userInfoDO.getPosition());
-        }
-        if (userInfoDO.getProfile() != null) {
-            wrapper.set("profile", userInfoDO.getProfile());
-        }
-        userInfoService.update(wrapper);
+        userInfoService.updateInfo(userInfoDTO);
         return Result.success();
     }
 }

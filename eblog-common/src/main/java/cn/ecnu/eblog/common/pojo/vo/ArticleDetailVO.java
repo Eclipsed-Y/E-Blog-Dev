@@ -6,13 +6,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class ArticleDetailVO {
-    private Long id;
     private Long articleId;
     private Long userId;
     private String nickname;
@@ -26,6 +26,7 @@ public class ArticleDetailVO {
     private Short officialStat;
     private Short topStat;
     private String content;
+    private List<String> tags;
     private LocalDateTime createTime;
     private LocalDateTime updateTime;
 }
