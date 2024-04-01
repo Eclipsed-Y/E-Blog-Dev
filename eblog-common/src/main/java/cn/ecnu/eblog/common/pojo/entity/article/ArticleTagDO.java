@@ -13,4 +13,5 @@ public class ArticleTagDO extends BaseDO {
     private static final long serialVersionUID = 1L;
     private Long articleId;
     private Long tagId;
+    private String tagName;
 }
