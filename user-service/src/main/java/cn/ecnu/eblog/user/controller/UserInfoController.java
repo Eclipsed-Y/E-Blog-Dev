@@ -1,5 +1,6 @@
 package cn.ecnu.eblog.user.controller;
 
+import cn.ecnu.eblog.common.annotation.Inner;
 import cn.ecnu.eblog.common.constant.MessageConstant;
 import cn.ecnu.eblog.common.context.BaseContext;
 import cn.ecnu.eblog.common.exception.AccountNotFoundException;

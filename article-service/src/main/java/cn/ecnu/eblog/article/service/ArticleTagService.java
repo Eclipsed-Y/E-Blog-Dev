@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface ArticleTagService extends MPJBaseService<ArticleTagDO> {
     List<String> getTagsByArticleId(Long id);
+
 }

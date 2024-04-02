@@ -2,6 +2,7 @@ package cn.ecnu.eblog.article.controller;
 
 import cn.ecnu.eblog.article.service.ArticleService;
 import cn.ecnu.eblog.common.context.BaseContext;
+import cn.ecnu.eblog.common.feign.UserClient;
 import cn.ecnu.eblog.common.pojo.dto.ArticleDTO;
 import cn.ecnu.eblog.common.pojo.dto.ArticlePageQueryDTO;
 import cn.ecnu.eblog.common.pojo.result.PageResult;
@@ -43,11 +44,10 @@ public class ArticleController {
         return Result.success(articleDetailVO);
     }
 
-    @PostMapping
-    public Result<ArticleVO> storeArticle(@RequestBody ArticleDTO articleDTO){
+    @PostMapping("/store")
+    public Result<Long> storeArticle(@RequestBody ArticleDTO articleDTO){
         log.info("id: {} 用户暂存文章", BaseContext.getCurrentId());
         long id = articleService.storeArticle(articleDTO);
-        // todo
-        return null;
+        return Result.success(id);
     }
 }

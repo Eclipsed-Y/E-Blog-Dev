@@ -17,7 +17,6 @@ import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
-
 import java.util.Objects;
 
 
@@ -33,6 +32,7 @@ public class Filter implements GlobalFilter {
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         log.info("接收到请求");
+
         // 如果是登录或者注册，直接放行
         String path = exchange.getRequest().getURI().getPath();
         if ("/user/login".equals(path) || "/user/signup".equals(path)){
@@ -48,11 +48,11 @@ public class Filter implements GlobalFilter {
                 throw new Exception();
             }
             log.info("当前用户id：{}", userId);
-            // 存入当前线程请求头中
-
+            // 存入当前线程请求头中，并且移除外部添加的from字段
             ServerHttpRequest modifiedRequest = exchange.getRequest()
                     .mutate()
                     .header("userId", String.valueOf(userId))
+                    .headers(httpHeaders -> httpHeaders.remove("from"))
                     .build();
 
             ServerWebExchange modifiedExchange = exchange.mutate()

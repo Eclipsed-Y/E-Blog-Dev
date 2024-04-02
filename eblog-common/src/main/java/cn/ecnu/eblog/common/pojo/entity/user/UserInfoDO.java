@@ -14,5 +14,5 @@ public class UserInfoDO extends BaseDO {
     private String avatar;
     private String position;
     private String profile;
-    private String role;
+    private Short role;
 }
