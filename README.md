@@ -2,6 +2,7 @@
 
 ## 数据库
 mysql
+
 redis
 
 ## 配置中心
@@ -10,22 +11,30 @@ nacos
 ## 服务架构
 ### 1. 网关 gateway
 解析jwt令牌，并在redis中验证是否存在，通过请求头字段传递用户id
+
 后续所有服务通过interceptor解析用户id
 ### 2. 上传服务 upload-service
 利用阿里云OSS上传文件
 ### 3. 用户服务 user-service
 登录后创建jwt令牌，并以相同过期时间存储在redis中
+
 退出时删除redis对应jwt令牌
+
 密码加盐后md5编码存储
+
 修改密码后调用退出方法
 ### 4. 文章服务 article-service
 利用mybatis-plus interceptor实现分页
+
 使用view代替联表查询
+
 利用TransactionTemplate细化事务粒度
 ## 通信
 ### 使用Feign内部调用
 调用时添加请求头字段，gateway去除对应的请求头字段
+
 内部接口利用AOP检测是否有对应请求头字段，进行权限验证
+
 防止内部接口暴露
 ## 接口
 ### upload-service
