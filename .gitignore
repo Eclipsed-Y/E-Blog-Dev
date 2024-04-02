@@ -39,4 +39,4 @@ build/
 
 ### 配置信息 ###
 **/application-dev.yml
-.idea
+/.idea/
