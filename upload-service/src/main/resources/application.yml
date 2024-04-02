@@ -1,6 +1,6 @@
 server:
-  port: 8081
+  port: ${eblog.port}
 aliyun:
   oss:
-    endpoint: https://oss-cn-shanghai.aliyuncs.com
-    bucket-name: akiey
+    endpoint: ${eblog.oss.endpoint}
+    bucket-name: ${eblog.oss.bucket-name}

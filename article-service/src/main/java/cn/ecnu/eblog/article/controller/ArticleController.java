@@ -2,13 +2,11 @@ package cn.ecnu.eblog.article.controller;
 
 import cn.ecnu.eblog.article.service.ArticleService;
 import cn.ecnu.eblog.common.context.BaseContext;
-import cn.ecnu.eblog.common.feign.UserClient;
 import cn.ecnu.eblog.common.pojo.dto.ArticleDTO;
 import cn.ecnu.eblog.common.pojo.dto.ArticlePageQueryDTO;
 import cn.ecnu.eblog.common.pojo.result.PageResult;
 import cn.ecnu.eblog.common.pojo.result.Result;
 import cn.ecnu.eblog.common.pojo.vo.ArticleDetailVO;
-import cn.ecnu.eblog.common.pojo.vo.ArticleVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -44,10 +42,20 @@ public class ArticleController {
         return Result.success(articleDetailVO);
     }
 
+    /**
+     * 暂存文章
+     * @param articleDTO
+     * @return
+     */
     @PostMapping("/store")
     public Result<Long> storeArticle(@RequestBody ArticleDTO articleDTO){
         log.info("id: {} 用户暂存文章", BaseContext.getCurrentId());
         long id = articleService.storeArticle(articleDTO);
         return Result.success(id);
+    }
+
+    @PutMapping("/update")
+    public Result<Long> updateArticle(@RequestBody ArticleDTO articleDTO){
+        return null;
     }
 }

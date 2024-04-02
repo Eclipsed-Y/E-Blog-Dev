@@ -5,6 +5,6 @@ spring:
     active: dev
   cloud:
     nacos:
-      server-addr: localhost:8848
+      server-addr: ${eblog.cloud.nacos.server-addr}
       config:
         file-extension: yaml
