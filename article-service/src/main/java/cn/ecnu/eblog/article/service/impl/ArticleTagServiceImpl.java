@@ -3,6 +3,8 @@ package cn.ecnu.eblog.article.service.impl;
 import cn.ecnu.eblog.article.mapper.ArticleTagMapper;
 import cn.ecnu.eblog.article.service.ArticleTagService;
 import cn.ecnu.eblog.article.service.TagService;
+import cn.ecnu.eblog.common.constant.MessageConstant;
+import cn.ecnu.eblog.common.exception.RequestExcetption;
 import cn.ecnu.eblog.common.pojo.entity.article.ArticleTagDO;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.github.yulichang.base.MPJBaseServiceImpl;
@@ -16,6 +18,10 @@ import java.util.List;
 
 @Service
 public class ArticleTagServiceImpl extends MPJBaseServiceImpl<ArticleTagMapper, ArticleTagDO> implements ArticleTagService {
+    @Autowired
+    private ArticleTagService articleTagService;
+    @Autowired
+    private TagService tagService;
     @Override
     public List<String> getTagsByArticleId(Long id) {
         MPJQueryWrapper<ArticleTagDO> queryWrapper = new MPJQueryWrapper<>();
@@ -24,5 +30,21 @@ public class ArticleTagServiceImpl extends MPJBaseServiceImpl<ArticleTagMapper, 
         return this.listObjs(queryWrapper, Object::toString);
     }
 
-
+    @Override
+    public void saveTags(List<Long> tagIdList, Long id) {
+        List<ArticleTagDO> list = new ArrayList<>();
+        for (Long tagId : tagIdList) {
+            String tagName = tagService.getById(tagId).getTagName();
+            if (tagName == null){
+                throw new RequestExcetption(MessageConstant.ILLEGAL_REQUEST);
+            }
+            ArticleTagDO articleTagDO = ArticleTagDO.builder()
+                    .tagId(tagId)
+                    .articleId(id)
+                    .tagName(tagName)
+                    .build();
+            list.add(articleTagDO);
+        }
+        articleTagService.saveBatch(list);
+    }
 }

@@ -8,4 +8,5 @@ import java.util.List;
 public interface ArticleTagService extends MPJBaseService<ArticleTagDO> {
     List<String> getTagsByArticleId(Long id);
 
+    void saveTags(List<Long> tagIdList, Long id);
 }

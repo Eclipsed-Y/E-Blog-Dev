@@ -5,7 +5,6 @@ import cn.ecnu.eblog.common.pojo.dto.ArticlePageQueryDTO;
 import cn.ecnu.eblog.common.pojo.entity.article.ArticleDO;
 import cn.ecnu.eblog.common.pojo.result.PageResult;
 import cn.ecnu.eblog.common.pojo.vo.ArticleDetailVO;
-import com.baomidou.mybatisplus.extension.service.IService;
 import com.github.yulichang.base.MPJBaseService;
 
 public interface ArticleService extends MPJBaseService<ArticleDO> {
@@ -13,5 +12,9 @@ public interface ArticleService extends MPJBaseService<ArticleDO> {
 
     ArticleDetailVO getArticleDetail(Long id);
 
-    long storeArticle(ArticleDTO articleDTO);
+    long insertArticle(ArticleDTO articleDTO);
+
+    long updateArticle(ArticleDTO articleDTO);
+
+    void deleteArticle(Long id);
 }

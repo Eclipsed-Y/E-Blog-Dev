@@ -12,5 +12,6 @@ public class ArticleDTO {
     private Long categoryId;
     private Short source;
     private String content;
+    private Short status;
     private List<Long> tagIdList;
 }

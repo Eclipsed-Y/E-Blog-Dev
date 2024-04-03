@@ -43,19 +43,38 @@ public class ArticleController {
     }
 
     /**
-     * 暂存文章
+     * 新增文章
      * @param articleDTO
      * @return
      */
-    @PostMapping("/store")
-    public Result<Long> storeArticle(@RequestBody ArticleDTO articleDTO){
-        log.info("id: {} 用户暂存文章", BaseContext.getCurrentId());
-        long id = articleService.storeArticle(articleDTO);
+    @PostMapping()
+    public Result<Long> insertArticle(@RequestBody ArticleDTO articleDTO){
+        log.info("id: {} 用户新增文章", BaseContext.getCurrentId());
+        long id = articleService.insertArticle(articleDTO);
         return Result.success(id);
     }
 
-    @PutMapping("/update")
+    /**
+     * 更新文章
+     * @param articleDTO
+     * @return
+     */
+    @PutMapping
     public Result<Long> updateArticle(@RequestBody ArticleDTO articleDTO){
-        return null;
+        log.info("id: {} 用户修改文章", BaseContext.getCurrentId());
+        long id = articleService.updateArticle(articleDTO);
+        return Result.success(id);
+    }
+
+    /**
+     * 删除文章
+     * @param id
+     * @return
+     */
+    @DeleteMapping("/{id}")
+    public Result<?> deleteArticle(@PathVariable("id") Long id){
+        log.info("id: {} 用户删除文章", BaseContext.getCurrentId());
+        articleService.deleteArticle(id);
+        return Result.success();
     }
 }
