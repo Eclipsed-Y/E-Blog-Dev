@@ -30,13 +30,12 @@ public class CommentListener {
             case INSERT:
                 commentService.insertComment((CommentDTO) msg.getData());
                 break;
-            // todo
-//            case UPDATE:
-//                commentService.updateComment(msg.getData());
-//                break;
-//            case DELETE:
-//                commentService.deleteComment(msg.getData());
-//                break;
+            case UPDATE:
+                commentService.updateComment((CommentDTO) msg.getData());
+                break;
+            case DELETE:
+                commentService.deleteComment((CommentDTO) msg.getData());
+                break;
             default:
                 throw new RequestExcetption(MessageConstant.ILLEGAL_REQUEST);
         }

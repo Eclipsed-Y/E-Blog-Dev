@@ -98,7 +98,7 @@ public class ArticleServiceImpl extends MPJBaseServiceImpl<ArticleMapper, Articl
         articleDetailDO.setContent(articleDTO.getContent());
 
         // 判断是否管理员
-        Short role = userClient.getUserInfoById(articleDO.getUserId()).getData().getRole();
+        Short role = userClient.getUserInfoById(BaseContext.getCurrentId(), BaseContext.getCurrentId()).getData().getRole();
         if (role == 1){
             articleDO.setOfficialStat((short) 1);
             // 管理员直接发布
@@ -135,7 +135,7 @@ public class ArticleServiceImpl extends MPJBaseServiceImpl<ArticleMapper, Articl
         }
 
         // 判断是否管理员
-        Short role = userClient.getUserInfoById(BaseContext.getCurrentId()).getData().getRole();
+        Short role = userClient.getUserInfoById(BaseContext.getCurrentId(), BaseContext.getCurrentId()).getData().getRole();
         UpdateWrapper<ArticleDO> updateWrapper = new UpdateWrapper<ArticleDO>().eq("id", articleDTO.getId());
 
         if (role == 1 && articleDTO.getStatus() == 0){

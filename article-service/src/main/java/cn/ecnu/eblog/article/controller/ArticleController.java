@@ -54,7 +54,7 @@ public class ArticleController {
     @Inner
     public Result<Boolean> existsArticle(@PathVariable("id") Long id){
         log.info("id: {} 用户查询文章是否存在", BaseContext.getCurrentId());
-        boolean exists = articleService.exists(new QueryWrapper<ArticleDO>().eq("id", id));
+        boolean exists = articleService.exists(new QueryWrapper<ArticleDO>().eq("id", id).eq("deleted", 0).eq("status", 1));
         return Result.success(exists);
     }
 

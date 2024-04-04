@@ -11,6 +11,7 @@ import cn.ecnu.eblog.common.pojo.entity.activity.CommentDO;
 import cn.ecnu.eblog.common.pojo.result.Result;
 import com.alibaba.nacos.shaded.org.checkerframework.checker.index.qual.SameLen;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.github.yulichang.base.MPJBaseServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -32,7 +33,7 @@ public class CommentServiceImpl extends MPJBaseServiceImpl<CommentMapper, Commen
         CommentDO commentDO = new CommentDO();
         BeanUtils.copyProperties(commentDTO, commentDO);
         // 判断是否合法
-        if (commentDO.getId() != null || commentDO.getArticleId() == null || !articleClient.existsArticle(commentDO.getArticleId()).getData() || commentDO.getRootCommentId() == null || commentDO.getParentCommentId() == null) {
+        if (commentDO.getId() != null || commentDO.getArticleId() == null || !articleClient.existsArticle(commentDO.getArticleId(), commentDO.getUserId()).getData() || commentDO.getRootCommentId() == null || commentDO.getParentCommentId() == null) {
             log.info("id: {} 用户评论失败", commentDO.getUserId());
             return;
         }
@@ -54,5 +55,34 @@ public class CommentServiceImpl extends MPJBaseServiceImpl<CommentMapper, Commen
             }
         }
         commentService.save(commentDO);
+    }
+
+    @Override
+    public void updateComment(CommentDTO commentDTO) {
+        // 判断是否合法
+        if (commentDTO.getId() == null || commentDTO.getContent() == null){
+            log.info("id: {} 用户修改评论失败", commentDTO.getUserId());
+        }
+        CommentDO commentDO = commentService.getOne(new QueryWrapper<CommentDO>().eq("id", commentDTO.getId()).eq("deleted", 0));
+        if (commentDO == null || !articleClient.existsArticle(commentDO.getArticleId(), commentDTO.getUserId()).getData() || !Objects.equals(commentDO.getUserId(), commentDTO.getUserId())){
+            log.info("id: {} 用户修改评论失败", commentDTO.getUserId());
+            return;
+        }
+        commentService.update(new UpdateWrapper<CommentDO>().eq("id", commentDTO.getId()).set("content", commentDTO.getContent()));
+    }
+
+    @Override
+    public void deleteComment(CommentDTO commentDTO) {
+        // 判断是否合法
+        if (commentDTO.getId() == null){
+            log.info("id: {} 用户修改评论失败", commentDTO.getUserId());
+            return;
+        }
+        CommentDO commentDO = commentService.getOne(new QueryWrapper<CommentDO>().eq("id", commentDTO.getId()).eq("deleted", 0));
+        if (commentDO == null || !articleClient.existsArticle(commentDO.getArticleId(), commentDTO.getUserId()).getData() || !Objects.equals(commentDO.getUserId(), commentDTO.getUserId())){
+            log.info("id: {} 用户修改评论失败", commentDTO.getUserId());
+            return;
+        }
+        commentService.update(new UpdateWrapper<CommentDO>().eq("id", commentDTO.getId()).set("deleted", 1));
     }
 }
