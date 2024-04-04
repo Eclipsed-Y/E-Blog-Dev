@@ -22,6 +22,10 @@ spring:
           uri: lb://article-service  # 路由目标地址， lb代表负载均衡
           predicates: # 路由条件，也就是只有满足条件的请求才会被路由到目标地址
             - Path=/category/**,/tag/**,/article/**
+        - id: activity-service  # 路由id
+          uri: lb://activity-service  # 路由目标地址， lb代表负载均衡
+          predicates: # 路由条件，也就是只有满足条件的请求才会被路由到目标地址
+            - Path=/activity/**
 #        - id: order-service
 #          uri: lb://order-service
 #          predicates:

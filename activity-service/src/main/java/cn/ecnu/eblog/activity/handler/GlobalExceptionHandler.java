@@ -1,4 +1,4 @@
-package cn.ecnu.eblog.article.handler;
+package cn.ecnu.eblog.activity.handler;
 
 import cn.ecnu.eblog.common.constant.MessageConstant;
 import cn.ecnu.eblog.common.context.BaseContext;

@@ -29,6 +29,8 @@ nacos
 使用view代替联表查询
 
 利用TransactionTemplate细化事务粒度
+### 5. 活动服务 activity-service
+利用消息队列rabbitmq实现对评论、点赞、关注等功能的异步、解耦、削峰
 ## 通信
 ### 使用Feign内部调用
 调用时添加请求头字段，gateway去除对应的请求头字段
@@ -54,6 +56,9 @@ nacos
 - 新增文章（暂存/发布）
 - 修改文章
 - 删除文章
+- 判断文章是否存在（内部接口）
+### activity-service
+- 新增评论
 ## RoadMap
 - [X] 网关服务
 - [X] 上传服务

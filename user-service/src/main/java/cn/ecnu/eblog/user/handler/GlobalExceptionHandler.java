@@ -1,6 +1,7 @@
 package cn.ecnu.eblog.user.handler;
 
 import cn.ecnu.eblog.common.constant.MessageConstant;
+import cn.ecnu.eblog.common.context.BaseContext;
 import cn.ecnu.eblog.common.exception.BaseException;
 import cn.ecnu.eblog.common.pojo.result.Result;
 import lombok.extern.slf4j.Slf4j;
@@ -22,8 +23,9 @@ public class GlobalExceptionHandler {
      * @return
      */
     @ExceptionHandler
-    public Result exceptionHandler(BaseException ex){
+    public Result<?> exceptionHandler(BaseException ex){
         log.error("异常信息：{}", ex.getMessage());
+        BaseContext.removeCurrentId();
         return Result.error(ex.getMessage());
     }
 
@@ -34,8 +36,9 @@ public class GlobalExceptionHandler {
      * @return
      */
     @ExceptionHandler
-    public Result exceptionHandler(SQLIntegrityConstraintViolationException ex){
+    public Result<?> exceptionHandler(SQLIntegrityConstraintViolationException ex){
         String message = ex.getMessage();
+        BaseContext.removeCurrentId();
         if (message.contains("Duplicate entry")){
             String username = message.split("'")[1];
             String msg = username + MessageConstant.ALREADY_EXISTS;

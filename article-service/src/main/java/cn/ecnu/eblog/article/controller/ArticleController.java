@@ -1,12 +1,15 @@
 package cn.ecnu.eblog.article.controller;
 
 import cn.ecnu.eblog.article.service.ArticleService;
+import cn.ecnu.eblog.common.annotation.Inner;
 import cn.ecnu.eblog.common.context.BaseContext;
 import cn.ecnu.eblog.common.pojo.dto.ArticleDTO;
 import cn.ecnu.eblog.common.pojo.dto.ArticlePageQueryDTO;
+import cn.ecnu.eblog.common.pojo.entity.article.ArticleDO;
 import cn.ecnu.eblog.common.pojo.result.PageResult;
 import cn.ecnu.eblog.common.pojo.result.Result;
 import cn.ecnu.eblog.common.pojo.vo.ArticleDetailVO;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -40,6 +43,19 @@ public class ArticleController {
         log.info("id: {} 用户查看id: {} 文章", BaseContext.getCurrentId(), id);
         ArticleDetailVO articleDetailVO = articleService.getArticleDetail(id);
         return Result.success(articleDetailVO);
+    }
+
+    /**
+     * 查询文章是否存在，内部接口
+     * @param id
+     * @return
+     */
+    @GetMapping("/exists/{id}")
+    @Inner
+    public Result<Boolean> existsArticle(@PathVariable("id") Long id){
+        log.info("id: {} 用户查询文章是否存在", BaseContext.getCurrentId());
+        boolean exists = articleService.exists(new QueryWrapper<ArticleDO>().eq("id", id));
+        return Result.success(exists);
     }
 
     /**
