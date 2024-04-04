@@ -25,7 +25,7 @@ public class CommentController {
         log.info("id: {} 用户新增评论", BaseContext.getCurrentId());
         commentDTO.setUserId(BaseContext.getCurrentId());
         Msg<CommentDTO> msg = new Msg<>(OperationType.INSERT, commentDTO);
-        rabbitTemplate.convertAndSend(MQConstant.EXCHANGE, MQConstant.COMMENT, msg);
+        rabbitTemplate.convertAndSend(MQConstant.TOPIC_EXCHANGE, MQConstant.COMMENT, msg);
         return Result.success();
     }
 }

@@ -31,6 +31,10 @@ spring:
         acknowledge-mode: auto
         # 最多一次消费多少条数据 -限流
         prefetch: 1
+        retry:
+          enabled: true  # 开启消费者
+          max-attempts: 6  # 最大重试次数
+          initial-interval: 500  # 重试间隔0.5s
       #开启ack
       direct:
         acknowledge-mode: auto
