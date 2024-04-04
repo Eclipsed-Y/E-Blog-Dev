@@ -8,7 +8,6 @@ spring:
   cloud:
     nacos:
       server-addr: ${eblog.cloud.nacos.server-addr}  # nacos地址
-    #      server-addr: localhost:80  # nacos地址
     gateway:
       routes:  # 网关路由配置
         - id: user-service  # 路由id

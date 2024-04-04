@@ -14,6 +14,7 @@
         <module>gateway</module>
         <module>upload-service</module>
         <module>article-service</module>
+        <module>activity-service</module>
     </modules>
 
     <properties>

@@ -6,6 +6,7 @@ import cn.ecnu.eblog.article.service.TagService;
 import cn.ecnu.eblog.common.constant.MessageConstant;
 import cn.ecnu.eblog.common.exception.RequestExcetption;
 import cn.ecnu.eblog.common.pojo.entity.article.ArticleTagDO;
+import cn.ecnu.eblog.common.pojo.entity.article.TagDO;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.github.yulichang.base.MPJBaseServiceImpl;
 import com.github.yulichang.query.MPJQueryWrapper;
@@ -34,14 +35,15 @@ public class ArticleTagServiceImpl extends MPJBaseServiceImpl<ArticleTagMapper, 
     public void saveTags(List<Long> tagIdList, Long id) {
         List<ArticleTagDO> list = new ArrayList<>();
         for (Long tagId : tagIdList) {
-            String tagName = tagService.getById(tagId).getTagName();
-            if (tagName == null){
+            TagDO tagDO = tagService.getById(tagId);
+            if (tagDO == null || tagDO.getStatus() == 0){
                 throw new RequestExcetption(MessageConstant.ILLEGAL_REQUEST);
             }
+
             ArticleTagDO articleTagDO = ArticleTagDO.builder()
                     .tagId(tagId)
                     .articleId(id)
-                    .tagName(tagName)
+                    .tagName(tagDO.getTagName())
                     .build();
             list.add(articleTagDO);
         }

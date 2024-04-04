@@ -1,0 +1,48 @@
+server:
+  port: ${eblog.port}
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+spring:
+  datasource:
+    url: ${eblog.datasource.url}
+    username: ${eblog.datasource.username}
+    password: ${eblog.datasource.password}
+  redis:
+    port: ${eblog.redis.port}
+    host: ${eblog.redis.host}
+    database: ${eblog.redis.database}
+  rabbitmq:
+    username: ${eblog.rabbitmq.username}
+    password: ${eblog.rabbitmq.password}
+    port: ${eblog.rabbitmq.port}
+    addresses: ${eblog.rabbitmq.addresses}
+    #开启发送失败返回
+    publisher-returns: true
+    #配置确认回调
+    publisher-confirm-type: correlated
+    listener:
+      simple:
+        #指定最小的消费者数量.
+        concurrency: 5
+        #指定最大的消费者数量.
+        max-concurrency: 10
+        #开启ack
+        acknowledge-mode: auto
+        # 最多一次消费多少条数据 -限流
+        prefetch: 1
+      #开启ack
+      direct:
+        acknowledge-mode: auto
+    #支持消息的确认与返回
+    template:
+      mandatory: true
+feign:
+  client:
+    config:
+      default:  # 全局
+        loggerLevel: BASIC  # 日志级别
+  httpclient:
+    enabled: true  # 支持httpclient的开关
+    max-connections: 200  # 最大连接数
+    max-connections-per-route: 50  # 单个路径的最大连接数
