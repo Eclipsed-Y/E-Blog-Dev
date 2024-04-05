@@ -28,20 +28,24 @@ nacos
 
 使用view代替联表查询
 
-利用TransactionTemplate细化事务粒度
+利用TransactionTemplate和PlatformTransactionManager细化事务粒度
 ### 5. 活动服务 activity-service
 二级评论机制，每篇文章有一级评论，一级评论包含二级评论，可追踪根评论和父评论
 
 利用消息队列rabbitmq实现对评论、点赞、关注等功能的异步、解耦、削峰
 
 消息队列重传6次保证可靠性，仍失败则加入死信队列
-## 通信
+## 分布式
 ### 使用Feign内部调用
 调用时添加请求头字段，gateway去除对应的请求头字段
 
 内部接口利用AOP检测是否有对应请求头字段，进行权限验证
 
 防止内部接口暴露
+### 分布式事务
+利用Seata进行分布式事务管理，采用AT模式
+
+将全局异常处理器的响应状态码设置4XX、5XX来解决其导致的Feign请求正常返回，造成Seata无法回滚的问题
 ## 接口
 ### upload-service
 - 上传图片

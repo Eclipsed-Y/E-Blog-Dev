@@ -29,4 +29,4 @@ seata:
       password: nacos
       # registry.conf中，配置cluster名称
       cluster: default
-  data-source-proxy-mode: XA
+  data-source-proxy-mode: AT
