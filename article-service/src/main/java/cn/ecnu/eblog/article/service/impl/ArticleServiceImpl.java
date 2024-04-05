@@ -5,6 +5,7 @@ import cn.ecnu.eblog.article.service.*;
 import cn.ecnu.eblog.common.constant.MessageConstant;
 import cn.ecnu.eblog.common.context.BaseContext;
 import cn.ecnu.eblog.common.exception.*;
+import cn.ecnu.eblog.common.feign.CommentClient;
 import cn.ecnu.eblog.common.feign.UserClient;
 import cn.ecnu.eblog.common.pojo.dto.ArticleDTO;
 import cn.ecnu.eblog.common.pojo.dto.ArticlePageQueryDTO;
@@ -50,6 +51,8 @@ public class ArticleServiceImpl extends MPJBaseServiceImpl<ArticleMapper, Articl
     private ArticleService articleService;
     @Autowired
     private CategoryService categoryService;
+    @Autowired
+    private CommentClient commentClient;
     @Override
     public PageResult getByCategoryId(ArticlePageQueryDTO articlePageQueryDTO) {
 
@@ -203,6 +206,8 @@ public class ArticleServiceImpl extends MPJBaseServiceImpl<ArticleMapper, Articl
                 articleService.update(wrapper);
                 articleDetailService.update(detailWrapper);
                 articleTagService.update(tagWrapper);
+                // todo 分布式事务
+                commentClient.deleteByArticleId(id, BaseContext.getCurrentId());
                 return null;
             }
         });
