@@ -21,11 +21,15 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.yulichang.base.MPJBaseServiceImpl;
 import com.github.yulichang.query.MPJQueryWrapper;
+import io.seata.spring.annotation.GlobalTransactional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
 import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionTemplate;
 
@@ -34,6 +38,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Service
+@Slf4j
 public class ArticleServiceImpl extends MPJBaseServiceImpl<ArticleMapper, ArticleDO> implements ArticleService {
     @Autowired
     private ArticleDetailService articleDetailService;
@@ -53,6 +58,8 @@ public class ArticleServiceImpl extends MPJBaseServiceImpl<ArticleMapper, Articl
     private CategoryService categoryService;
     @Autowired
     private CommentClient commentClient;
+    @Autowired
+    private PlatformTransactionManager platformTransactionManager;
     @Override
     public PageResult getByCategoryId(ArticlePageQueryDTO articlePageQueryDTO) {
 
@@ -191,6 +198,7 @@ public class ArticleServiceImpl extends MPJBaseServiceImpl<ArticleMapper, Articl
     }
 
     @Override
+    @GlobalTransactional
     public void deleteArticle(Long id) {
         // 确认用户是否有权限
         ArticleDO origin = articleService.getById(id);
@@ -200,17 +208,30 @@ public class ArticleServiceImpl extends MPJBaseServiceImpl<ArticleMapper, Articl
         UpdateWrapper<ArticleDO> wrapper = new UpdateWrapper<ArticleDO>().eq("id", id).set("deleted", 1);
         UpdateWrapper<ArticleDetailDO> detailWrapper = new UpdateWrapper<ArticleDetailDO>().eq("article_id", id).set("deleted", 1);
         UpdateWrapper<ArticleTagDO> tagWrapper = new UpdateWrapper<ArticleTagDO>().eq("article_id", id).set("deleted", 1);
-        transactionTemplate.execute(new TransactionCallback<Object>() {
-            @Override
-            public Object doInTransaction(TransactionStatus transactionStatus) {
-                articleService.update(wrapper);
-                articleDetailService.update(detailWrapper);
-                articleTagService.update(tagWrapper);
-                // todo 分布式事务
-                commentClient.deleteByArticleId(id, BaseContext.getCurrentId());
-                return null;
-            }
-        });
+//        transactionTemplate.execute(new TransactionCallback<Object>() {
+//            @Override
+//            public Object doInTransaction(TransactionStatus transactionStatus) {
+//                articleService.update(wrapper);
+//                articleDetailService.update(detailWrapper);
+//                articleTagService.update(tagWrapper);
+//                // todo 分布式事务
+//                commentClient.deleteByArticleId(id, BaseContext.getCurrentId());
+//                return null;
+//            }
+//        });
+        TransactionStatus status = platformTransactionManager.getTransaction(new DefaultTransactionDefinition());
+        try {
+            articleService.update(wrapper);
+            articleDetailService.update(detailWrapper);
+            articleTagService.update(tagWrapper);
+            // todo 分布式事务
+            commentClient.deleteByArticleId(id, BaseContext.getCurrentId());
+            platformTransactionManager.commit(status);
+        }catch (Exception e){
+            log.info("分布式事务回滚");
+            platformTransactionManager.rollback(status);
+            throw e;
+        }
     }
 
 }

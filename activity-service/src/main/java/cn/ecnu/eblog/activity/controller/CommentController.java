@@ -79,7 +79,6 @@ public class CommentController {
 
     @DeleteMapping("/delete/{articleId}")
     @Inner
-    @Transactional
     public Result<?> deleteByArticleId(@PathVariable("articleId") Long articleId){
         log.info("id: {} 用户删除文章及其评论", BaseContext.getCurrentId());
         commentService.update(new UpdateWrapper<CommentDO>().eq("article_id", articleId).set("deleted", 1));
