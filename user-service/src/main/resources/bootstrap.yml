@@ -8,3 +8,25 @@ spring:
       server-addr: ${eblog.cloud.nacos.server-addr}
       config:
         file-extension: yaml
+seata:
+  enabled: true
+  # 事务组的名称，对应service.vgroupMapping.default_tx_group=xxx中配置的default_tx_group
+  tx-service-group: default_tx_group
+  # 配置事务组与集群的对应关系
+  service:
+    vgroup-mapping:
+      # default_tx_group为事务组的名称，default为集群名称(与registry.conf中的一致)
+      default_tx_group: default
+    disable-global-transaction: false
+  registry:
+    type: nacos
+    nacos:
+      application: seata-server
+      server-addr: ${eblog.cloud.nacos.server-addr}
+      group: DEFAULT_GROUP
+      namespace: ""
+      username: nacos
+      password: nacos
+      # registry.conf中，配置cluster名称
+      cluster: default
+  data-source-proxy-mode: AT

@@ -1,9 +1,12 @@
 # 搭建一个微服务架构下的blog项目
 
 ## 数据库
-mysql
+### MySQL
+通过冗余字段实现不同库联表查询
 
-redis
+同数据库则使用view代替联表查询
+
+### Redis
 
 ## 配置中心
 nacos
@@ -25,8 +28,6 @@ nacos
 修改密码后调用退出方法
 ### 4. 文章服务 article-service
 利用mybatis-plus interceptor实现分页
-
-使用view代替联表查询
 
 利用TransactionTemplate和PlatformTransactionManager细化事务粒度
 ### 5. 活动服务 activity-service

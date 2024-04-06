@@ -14,7 +14,9 @@ public class CommentDO extends BaseDO {
     private static final long serialVersionUID = 1L;
     private Long articleId;
     private Long userId;
+    private String nickname;
+    private String avatar;
+    private String content;
     private Long rootCommentId;
     private Long parentCommentId;
-    private String content;
 }

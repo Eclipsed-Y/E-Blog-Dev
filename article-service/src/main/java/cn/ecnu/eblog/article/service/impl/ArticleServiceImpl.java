@@ -9,6 +9,7 @@ import cn.ecnu.eblog.common.feign.CommentClient;
 import cn.ecnu.eblog.common.feign.UserClient;
 import cn.ecnu.eblog.common.pojo.dto.ArticleDTO;
 import cn.ecnu.eblog.common.pojo.dto.ArticlePageQueryDTO;
+import cn.ecnu.eblog.common.pojo.dto.UserInfoDTO;
 import cn.ecnu.eblog.common.pojo.entity.article.*;
 import cn.ecnu.eblog.common.pojo.result.PageResult;
 import cn.ecnu.eblog.common.pojo.result.Result;
@@ -102,13 +103,15 @@ public class ArticleServiceImpl extends MPJBaseServiceImpl<ArticleMapper, Articl
         BeanUtils.copyProperties(articleDTO, articleDO);
         // 设置userId
         articleDO.setUserId(BaseContext.getCurrentId());
-
-        // 文章细节
-        ArticleDetailDO articleDetailDO = new ArticleDetailDO();
-        articleDetailDO.setContent(articleDTO.getContent());
-
+        // 获取用户昵称和头像
+        Result<UserInfoVO> userInfoRes = userClient.getUserInfoById(articleDO.getUserId(), articleDO.getUserId());
+        if (userInfoRes.getCode() == 0){
+            throw new FeignBaseException(MessageConstant.INNER_ERROR);
+        }
+        articleDO.setNickname(userInfoRes.getData().getNickname());
+        articleDO.setAvatar(userInfoRes.getData().getAvatar());
         // 判断是否管理员
-        Short role = userClient.getUserInfoById(BaseContext.getCurrentId(), BaseContext.getCurrentId()).getData().getRole();
+        Short role = userInfoRes.getData().getRole();
         if (role == 1){
             articleDO.setOfficialStat((short) 1);
             // 管理员直接发布
@@ -116,6 +119,9 @@ public class ArticleServiceImpl extends MPJBaseServiceImpl<ArticleMapper, Articl
                 articleDO.setStatus((short) 1);
             }
         }
+        // 文章细节
+        ArticleDetailDO articleDetailDO = new ArticleDetailDO();
+        articleDetailDO.setContent(articleDTO.getContent());
         transactionTemplate.execute(new TransactionCallback<Object>() {
             @Override
             public Object doInTransaction(TransactionStatus transactionStatus) {
@@ -144,10 +150,13 @@ public class ArticleServiceImpl extends MPJBaseServiceImpl<ArticleMapper, Articl
             throw new AccessException(MessageConstant.ACCESS_DENIED);
         }
 
-        // 判断是否管理员
-        Short role = userClient.getUserInfoById(BaseContext.getCurrentId(), BaseContext.getCurrentId()).getData().getRole();
         UpdateWrapper<ArticleDO> updateWrapper = new UpdateWrapper<ArticleDO>().eq("id", articleDTO.getId());
-
+        // 判断是否管理员
+        Result<UserInfoVO> useInfoRes = userClient.getUserInfoById(BaseContext.getCurrentId(), BaseContext.getCurrentId());
+        if (useInfoRes.getCode() == 0){
+            throw new FeignBaseException(MessageConstant.INNER_ERROR);
+        }
+        Short role = useInfoRes.getData().getRole();
         if (role == 1 && articleDTO.getStatus() == 0){
             updateWrapper.set("status", 1);
         } else if (role != 1 && origin.getStatus() == 1){
@@ -198,7 +207,6 @@ public class ArticleServiceImpl extends MPJBaseServiceImpl<ArticleMapper, Articl
     }
 
     @Override
-    @GlobalTransactional
     public void deleteArticle(Long id) {
         // 确认用户是否有权限
         ArticleDO origin = articleService.getById(id);
@@ -219,19 +227,42 @@ public class ArticleServiceImpl extends MPJBaseServiceImpl<ArticleMapper, Articl
 //                return null;
 //            }
 //        });
+
         TransactionStatus status = platformTransactionManager.getTransaction(new DefaultTransactionDefinition());
         try {
             articleService.update(wrapper);
             articleDetailService.update(detailWrapper);
             articleTagService.update(tagWrapper);
-            // todo 分布式事务
-            commentClient.deleteByArticleId(id, BaseContext.getCurrentId());
+            // 分布式事务
+            Result<?> result = commentClient.deleteByArticleId(id, BaseContext.getCurrentId());
+            if (result.getCode() == 0){
+                throw new FeignBaseException(MessageConstant.INNER_ERROR);
+            }
             platformTransactionManager.commit(status);
         }catch (Exception e){
             log.info("分布式事务回滚");
             platformTransactionManager.rollback(status);
             throw e;
         }
+    }
+
+    /**
+     * 内部方法，更新用户信息
+     * @param userInfoDTO
+     */
+    @Override
+    public void updateUserInfo(UserInfoDTO userInfoDTO) {
+        if (userInfoDTO.getNickname() == null && userInfoDTO.getAvatar() == null){
+            return;
+        }
+        UpdateWrapper<ArticleDO> wrapper = new UpdateWrapper<ArticleDO>().eq("user_id", BaseContext.getCurrentId());
+        if (userInfoDTO.getNickname() != null){
+            wrapper.set("nickname", userInfoDTO.getNickname());
+        }
+        if (userInfoDTO.getAvatar() !=null){
+            wrapper.set("avatar", userInfoDTO.getAvatar());
+        }
+        articleService.update(wrapper);
     }
 
 }

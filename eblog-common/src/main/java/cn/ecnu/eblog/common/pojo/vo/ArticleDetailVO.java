@@ -17,7 +17,6 @@ public class ArticleDetailVO {
     private Long userId;
     private String nickname;
     private String avatar;
-    private Short role;
     private String title;
     private String summary;
     private Long categoryId;

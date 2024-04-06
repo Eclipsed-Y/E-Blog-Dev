@@ -14,7 +14,6 @@ public class ArticleDetailViewDO extends BaseDO {
     private Long userId;
     private String nickname;
     private String avatar;
-    private Short role;
     private String title;
     private String summary;
     private Long categoryId;

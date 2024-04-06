@@ -2,6 +2,7 @@ package cn.ecnu.eblog.article.service;
 
 import cn.ecnu.eblog.common.pojo.dto.ArticleDTO;
 import cn.ecnu.eblog.common.pojo.dto.ArticlePageQueryDTO;
+import cn.ecnu.eblog.common.pojo.dto.UserInfoDTO;
 import cn.ecnu.eblog.common.pojo.entity.article.ArticleDO;
 import cn.ecnu.eblog.common.pojo.result.PageResult;
 import cn.ecnu.eblog.common.pojo.vo.ArticleDetailVO;
@@ -17,4 +18,6 @@ public interface ArticleService extends MPJBaseService<ArticleDO> {
     long updateArticle(ArticleDTO articleDTO);
 
     void deleteArticle(Long id);
+
+    void updateUserInfo(UserInfoDTO userInfoDTO);
 }

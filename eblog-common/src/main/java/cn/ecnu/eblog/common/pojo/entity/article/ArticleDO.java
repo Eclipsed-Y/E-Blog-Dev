@@ -11,6 +11,8 @@ import lombok.EqualsAndHashCode;
 public class ArticleDO extends BaseDO {
     private static final long serialVersionUID = 1L;
     private Long userId;
+    private String nickname;
+    private String avatar;
     private String title;
     private String summary;
     private Long categoryId;

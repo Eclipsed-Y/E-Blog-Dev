@@ -5,6 +5,7 @@ import cn.ecnu.eblog.common.annotation.Inner;
 import cn.ecnu.eblog.common.context.BaseContext;
 import cn.ecnu.eblog.common.pojo.dto.ArticleDTO;
 import cn.ecnu.eblog.common.pojo.dto.ArticlePageQueryDTO;
+import cn.ecnu.eblog.common.pojo.dto.UserInfoDTO;
 import cn.ecnu.eblog.common.pojo.entity.article.ArticleDO;
 import cn.ecnu.eblog.common.pojo.result.PageResult;
 import cn.ecnu.eblog.common.pojo.result.Result;
@@ -53,9 +54,22 @@ public class ArticleController {
     @GetMapping("/exists/{id}")
     @Inner
     public Result<Boolean> existsArticle(@PathVariable("id") Long id){
-        log.info("id: {} 用户查询文章是否存在", BaseContext.getCurrentId());
+        log.info("id: {} 用户内部调用查询文章是否存在", BaseContext.getCurrentId());
         boolean exists = articleService.exists(new QueryWrapper<ArticleDO>().eq("id", id).eq("deleted", 0).eq("status", 1));
         return Result.success(exists);
+    }
+
+    /**
+     * 内部接口，修改用户信息
+     * @param userInfoDTO
+     * @return
+     */
+    @PutMapping("/userInfo")
+    @Inner
+    public Result<?> updateUserInfo(@RequestBody UserInfoDTO userInfoDTO){
+        log.info("id: {} 用户内部调用修改用户信息", BaseContext.getCurrentId());
+        articleService.updateUserInfo(userInfoDTO);
+        return Result.success();
     }
 
     /**
