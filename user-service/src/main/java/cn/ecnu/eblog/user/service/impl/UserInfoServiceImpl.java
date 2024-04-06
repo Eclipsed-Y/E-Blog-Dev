@@ -20,6 +20,8 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
@@ -36,7 +38,10 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfoDO>
     private ArticleClient articleClient;
     @Autowired
     private CommentClient commentClient;
+    @Autowired
+    private RedisTemplate<String, Object> redisTemplate;
     @Override
+    @Cacheable(value = "userInfo", cacheManager = "redisCacheManager", key = "#id")
     public UserInfoVO getUserInfo(Long id) {
         if (id == null){
             throw new RequestExcetption(MessageConstant.ILLEGAL_REQUEST);
