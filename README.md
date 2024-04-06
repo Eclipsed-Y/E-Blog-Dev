@@ -7,6 +7,7 @@
 同数据库则使用view代替联表查询
 
 ### Redis
+继承RedisCacheManager、RedisCache类，重写两个类的部分方法，实现Redis基于SpringCache的随机过期时间缓存，应对缓存雪崩
 
 ## 配置中心
 nacos
