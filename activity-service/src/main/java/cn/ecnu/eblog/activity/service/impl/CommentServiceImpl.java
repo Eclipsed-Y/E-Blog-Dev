@@ -7,6 +7,7 @@ import cn.ecnu.eblog.activity.utils.RedisUtil;
 import cn.ecnu.eblog.common.constant.CacheConstant;
 import cn.ecnu.eblog.common.constant.MessageConstant;
 import cn.ecnu.eblog.common.context.BaseContext;
+import cn.ecnu.eblog.common.exception.AccessException;
 import cn.ecnu.eblog.common.exception.FeignBaseException;
 import cn.ecnu.eblog.common.exception.RequestExcetption;
 import cn.ecnu.eblog.common.feign.ArticleClient;
@@ -33,7 +34,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import java.util.ArrayList;
@@ -54,6 +57,8 @@ public class CommentServiceImpl extends MPJBaseServiceImpl<CommentMapper, Commen
     private UserClient userClient;
     @Autowired
     private RedisUtil redisUtil;
+    @Autowired
+    private RedisTemplate<String, Object> redisTemplate;
 
     /**
      * 判断是否非法

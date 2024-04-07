@@ -24,17 +24,17 @@ public class CommentListener {
     @Autowired
     private CommentService commentService;
     @RabbitHandler
-    public void process(Msg<?> msg){
+    public void process(Msg<CommentDTO> msg){
         OperationType operationType = msg.getOperationType();
         switch (operationType){
             case INSERT:
-                commentService.insertComment((CommentDTO) msg.getData());
+                commentService.insertComment(msg.getData());
                 break;
             case UPDATE:
-                commentService.updateComment((CommentDTO) msg.getData());
+                commentService.updateComment(msg.getData());
                 break;
             case DELETE:
-                commentService.deleteComment((CommentDTO) msg.getData());
+                commentService.deleteComment(msg.getData());
                 break;
             default:
                 throw new RequestExcetption(MessageConstant.ILLEGAL_REQUEST);
