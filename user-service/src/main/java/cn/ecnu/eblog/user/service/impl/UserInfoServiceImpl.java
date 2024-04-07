@@ -1,7 +1,9 @@
 package cn.ecnu.eblog.user.service.impl;
 
+import cn.ecnu.eblog.common.constant.CacheConstant;
 import cn.ecnu.eblog.common.constant.MessageConstant;
 import cn.ecnu.eblog.common.context.BaseContext;
+import cn.ecnu.eblog.common.exception.AccessException;
 import cn.ecnu.eblog.common.exception.AccountNotFoundException;
 import cn.ecnu.eblog.common.exception.FeignBaseException;
 import cn.ecnu.eblog.common.exception.RequestExcetption;
@@ -20,6 +22,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -41,7 +44,7 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfoDO>
     @Autowired
     private RedisTemplate<String, Object> redisTemplate;
     @Override
-    @Cacheable(value = "userInfo", cacheManager = "redisCacheManager", key = "#id")
+    @Cacheable(value = CacheConstant.USER_INFO, cacheManager = CacheConstant.CACHE_MANAGER, key = "#id")
     public UserInfoVO getUserInfo(Long id) {
         if (id == null){
             throw new RequestExcetption(MessageConstant.ILLEGAL_REQUEST);
@@ -54,12 +57,14 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfoDO>
         BeanUtils.copyProperties(userInfoDO, userInfoVO);
         return userInfoVO;
     }
-
     @Override
+    @CacheEvict(value = CacheConstant.USER_INFO, cacheManager = CacheConstant.CACHE_MANAGER, key = "#userInfoDTO.userId")
     public void updateInfo(UserInfoDTO userInfoDTO) {
+        if (userInfoDTO.getUserId() == null || !BaseContext.getCurrentId().equals(userInfoDTO.getUserId())){
+            throw new AccessException(MessageConstant.ILLEGAL_REQUEST);
+        }
         UserInfoDO userInfoDO = new UserInfoDO();
         BeanUtils.copyProperties(userInfoDTO, userInfoDO);
-        userInfoDO.setUserId(BaseContext.getCurrentId());
         UpdateWrapper<UserInfoDO> wrapper = new UpdateWrapper<>();
         wrapper.eq("user_id", userInfoDO.getUserId());
         if (userInfoDO.getNickname() != null) {

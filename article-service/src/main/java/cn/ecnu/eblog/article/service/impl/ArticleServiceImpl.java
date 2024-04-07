@@ -2,6 +2,7 @@ package cn.ecnu.eblog.article.service.impl;
 
 import cn.ecnu.eblog.article.mapper.ArticleMapper;
 import cn.ecnu.eblog.article.service.*;
+import cn.ecnu.eblog.common.constant.CacheConstant;
 import cn.ecnu.eblog.common.constant.MessageConstant;
 import cn.ecnu.eblog.common.context.BaseContext;
 import cn.ecnu.eblog.common.exception.*;
@@ -26,6 +27,9 @@ import io.seata.spring.annotation.GlobalTransactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
@@ -62,8 +66,8 @@ public class ArticleServiceImpl extends MPJBaseServiceImpl<ArticleMapper, Articl
     @Autowired
     private PlatformTransactionManager platformTransactionManager;
     @Override
+    @Cacheable(value = CacheConstant.ARTICLE_PAGE, cacheManager = CacheConstant.CACHE_MANAGER, key = "#articlePageQueryDTO.categoryId + '_' + #articlePageQueryDTO.page + '_' + #articlePageQueryDTO.pageSize + '_' + #articlePageQueryDTO.sortMethod")
     public PageResult getByCategoryId(ArticlePageQueryDTO articlePageQueryDTO) {
-
         Page<ArticleViewDO> page = articleViewService.pageSelect(articlePageQueryDTO);
         long total = page.getTotal();
         List<ArticleViewDO> records = page.getRecords();
@@ -83,6 +87,7 @@ public class ArticleServiceImpl extends MPJBaseServiceImpl<ArticleMapper, Articl
     }
 
     @Override
+    @Cacheable(value = CacheConstant.ARTICLE_DETAIL, cacheManager = CacheConstant.CACHE_MANAGER, key = "#id")
     public ArticleDetailVO getArticleDetail(Long id) {
         ArticleDetailViewDO articleDetailViewDO = articleDetailViewService.getArticleDetail(id);
         ArticleDetailVO articleDetailVO = new ArticleDetailVO();
@@ -94,6 +99,7 @@ public class ArticleServiceImpl extends MPJBaseServiceImpl<ArticleMapper, Articl
     }
 
     @Override
+    @CacheEvict(value = CacheConstant.ARTICLE_PAGE, cacheManager = CacheConstant.CACHE_MANAGER, allEntries = true)
     public long insertArticle(ArticleDTO articleDTO) {
         // 判断是否合法
         if (articleDTO.getId() != null || articleDTO.getStatus() != 0 && articleDTO.getStatus() != -1 || articleDTO.getSource() != 1 && articleDTO.getSource() != 0){
@@ -139,6 +145,8 @@ public class ArticleServiceImpl extends MPJBaseServiceImpl<ArticleMapper, Articl
     }
 
     @Override
+    @Caching(evict = {@CacheEvict(value = CacheConstant.ARTICLE_DETAIL, cacheManager = CacheConstant.CACHE_MANAGER, key = "#articleDTO.id"), @CacheEvict(value = CacheConstant.ARTICLE_PAGE, cacheManager = CacheConstant.CACHE_MANAGER, allEntries = true)} )
+//    @CacheEvict(value = CacheConstant.ARTICLE_DETAIL, cacheManager = CacheConstant.CACHE_MANAGER, key = "#articleDTO.id")
     public long updateArticle(ArticleDTO articleDTO) {
         // 判断是否合法
         if (articleDTO.getId() == null || articleDTO.getStatus() != 0 && articleDTO.getStatus() != -1 || articleDTO.getSource() != 1 && articleDTO.getSource() != 0){
@@ -207,6 +215,7 @@ public class ArticleServiceImpl extends MPJBaseServiceImpl<ArticleMapper, Articl
     }
 
     @Override
+    @Caching(evict = {@CacheEvict(value = CacheConstant.ARTICLE_DETAIL, cacheManager = CacheConstant.CACHE_MANAGER, key = "#id"), @CacheEvict(value = CacheConstant.ARTICLE_PAGE, cacheManager = CacheConstant.CACHE_MANAGER, allEntries = true)})
     public void deleteArticle(Long id) {
         // 确认用户是否有权限
         ArticleDO origin = articleService.getById(id);
@@ -251,6 +260,7 @@ public class ArticleServiceImpl extends MPJBaseServiceImpl<ArticleMapper, Articl
      * @param userInfoDTO
      */
     @Override
+    @Caching(evict = {@CacheEvict(value = CacheConstant.ARTICLE_DETAIL, cacheManager = CacheConstant.CACHE_MANAGER, allEntries = true), @CacheEvict(value = CacheConstant.ARTICLE_PAGE, cacheManager = CacheConstant.CACHE_MANAGER, allEntries = true)})
     public void updateUserInfo(UserInfoDTO userInfoDTO) {
         if (userInfoDTO.getNickname() == null && userInfoDTO.getAvatar() == null){
             return;

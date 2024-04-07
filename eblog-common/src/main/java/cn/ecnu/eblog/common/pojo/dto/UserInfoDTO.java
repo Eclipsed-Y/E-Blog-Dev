@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class UserInfoDTO {
+    private Long userId;
     private String nickname;
     private String avatar;
     private String position;

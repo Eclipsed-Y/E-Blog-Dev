@@ -2,11 +2,13 @@ package cn.ecnu.eblog.article.service.impl;
 
 import cn.ecnu.eblog.article.mapper.TagMapper;
 import cn.ecnu.eblog.article.service.TagService;
+import cn.ecnu.eblog.common.constant.CacheConstant;
 import cn.ecnu.eblog.common.pojo.entity.article.TagDO;
 import cn.ecnu.eblog.common.pojo.vo.TagVO;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.yulichang.base.MPJBaseServiceImpl;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -15,6 +17,7 @@ import java.util.List;
 @Service
 public class TagServiceImpl extends MPJBaseServiceImpl<TagMapper, TagDO> implements TagService {
     @Override
+    @Cacheable(value = CacheConstant.TAG, cacheManager = CacheConstant.CACHE_MANAGER)
     public List<TagVO> getAllTags() {
         QueryWrapper<TagDO> wrapper = new QueryWrapper<>();
         // 未删除且已发布

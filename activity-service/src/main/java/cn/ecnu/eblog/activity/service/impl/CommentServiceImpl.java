@@ -3,6 +3,8 @@ package cn.ecnu.eblog.activity.service.impl;
 import cn.ecnu.eblog.activity.mapper.CommentMapper;
 import cn.ecnu.eblog.activity.service.CommentService;
 import cn.ecnu.eblog.activity.service.SecondCommentViewService;
+import cn.ecnu.eblog.activity.utils.RedisUtil;
+import cn.ecnu.eblog.common.constant.CacheConstant;
 import cn.ecnu.eblog.common.constant.MessageConstant;
 import cn.ecnu.eblog.common.context.BaseContext;
 import cn.ecnu.eblog.common.exception.FeignBaseException;
@@ -28,7 +30,11 @@ import com.github.yulichang.query.MPJQueryWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,23 +52,29 @@ public class CommentServiceImpl extends MPJBaseServiceImpl<CommentMapper, Commen
     private SecondCommentViewService secondCommentViewService;
     @Autowired
     private UserClient userClient;
+    @Autowired
+    private RedisUtil redisUtil;
 
     /**
      * 判断是否非法
-     * 合法返回false，非法返回true
+     * 合法返回DO，非法返回null
      *
      * @param commentDTO
      * @return
      */
-    private boolean checkIllegal(CommentDTO commentDTO) {
+    private CommentDO checkIllegal(CommentDTO commentDTO) {
         CommentDO commentDO = commentService.getOne(new QueryWrapper<CommentDO>().eq("id", commentDTO.getId()).eq("deleted", 0));
         if (commentDO == null || !articleClient.existsArticle(commentDO.getArticleId(), commentDTO.getUserId()).getData() || !Objects.equals(commentDO.getUserId(), commentDTO.getUserId())) {
             log.info("id: {} 用户修改评论失败", commentDTO.getUserId());
-            return true;
+            return null;
         }
-        return false;
+        return commentDO;
     }
 
+    /**
+     * 手动删除缓存
+     * @param commentDTO
+     */
     @Override
     public void insertComment(CommentDTO commentDTO) {
         CommentDO commentDO = new CommentDO();
@@ -97,31 +109,53 @@ public class CommentServiceImpl extends MPJBaseServiceImpl<CommentMapper, Commen
         commentDO.setNickname(userInfoRes.getData().getNickname());
         commentDO.setAvatar(userInfoRes.getData().getAvatar());
         commentService.save(commentDO);
+
+        // 删除缓存
+        redisUtil.remove(CacheConstant.COMMENT_PAGE, commentDTO.getArticleId() + "_");
+        redisUtil.remove(CacheConstant.SECOND_COMMENT_PAGE, commentDO.getRootCommentId() + "_");
     }
 
+    /**
+     * 手动删除缓存
+     * @param commentDTO
+     */
     @Override
     public void updateComment(CommentDTO commentDTO) {
+        CommentDO commentDO = null;
         // 判断是否合法
-        if (commentDTO.getId() == null || commentDTO.getContent() == null || checkIllegal(commentDTO)) {
+        if (commentDTO.getId() == null || commentDTO.getContent() == null || (commentDO = checkIllegal(commentDTO)) == null) {
             log.info("id: {} 用户修改评论请求非法", commentDTO.getUserId());
             return;
         }
         commentService.update(new UpdateWrapper<CommentDO>().eq("id", commentDTO.getId()).set("content", commentDTO.getContent()));
+        // 删除缓存
+        // 删除缓存
+        redisUtil.remove(CacheConstant.COMMENT_PAGE, commentDO.getArticleId() + "_");
+        redisUtil.remove(CacheConstant.SECOND_COMMENT_PAGE, commentDO.getRootCommentId() + "_");
     }
 
+    /**
+     * 手动删除缓存
+     * @param commentDTO
+     */
     @Override
     public void deleteComment(CommentDTO commentDTO) {
+        CommentDO commentDO = null;
         // 判断是否合法
-        if (commentDTO.getId() == null || checkIllegal(commentDTO)) {
+        if (commentDTO.getId() == null || (commentDO = checkIllegal(commentDTO)) == null) {
             log.info("id: {} 用户删除评论请求非法", commentDTO.getUserId());
             return;
         }
         commentService.update(new UpdateWrapper<CommentDO>()
                 .eq("id", commentDTO.getId())
                 .or(commentDOUpdateWrapper -> commentDOUpdateWrapper.eq("root_comment_id", commentDTO.getId())).set("deleted", 1));
+        // 删除缓存
+        redisUtil.remove(CacheConstant.COMMENT_PAGE, commentDO.getArticleId() + "_");
+        redisUtil.remove(CacheConstant.SECOND_COMMENT_PAGE, commentDO.getRootCommentId() + "_");
     }
 
     @Override
+    @Cacheable(value = CacheConstant.COMMENT_PAGE, cacheManager = CacheConstant.CACHE_MANAGER, key = "#commentPageQueryDTO.articleId + '_' + #commentPageQueryDTO.page + '_' + #commentPageQueryDTO.pageSize")
     public PageResult pageSelect(CommentPageQueryDTO commentPageQueryDTO) {
         // 判断是否合法
         if (commentPageQueryDTO.getArticleId() == null || !articleClient.existsArticle(commentPageQueryDTO.getArticleId(), BaseContext.getCurrentId()).getData()) {
@@ -149,6 +183,7 @@ public class CommentServiceImpl extends MPJBaseServiceImpl<CommentMapper, Commen
     }
 
     @Override
+    @Cacheable(value = CacheConstant.SECOND_COMMENT_PAGE, cacheManager = CacheConstant.CACHE_MANAGER, key = "#secondCommentPageQueryDTO.rootCommentId + '_' + #secondCommentPageQueryDTO.page + '_' + #secondCommentPageQueryDTO.pageSize")
     public PageResult getSecondComment(SecondCommentPageQueryDTO secondCommentPageQueryDTO) {
         Page<SecondCommentViewDO> page = secondCommentViewService.pageSelect(secondCommentPageQueryDTO);
         long total = page.getTotal();
@@ -168,6 +203,7 @@ public class CommentServiceImpl extends MPJBaseServiceImpl<CommentMapper, Commen
      * @param userInfoDTO
      */
     @Override
+    @Caching(evict = {@CacheEvict(value = CacheConstant.COMMENT_PAGE, cacheManager = CacheConstant.CACHE_MANAGER, allEntries = true), @CacheEvict(value = CacheConstant.SECOND_COMMENT_PAGE, cacheManager = CacheConstant.CACHE_MANAGER, allEntries = true)})
     public void updateUserInfo(UserInfoDTO userInfoDTO) {
         if (userInfoDTO.getNickname() == null && userInfoDTO.getAvatar() == null) {
             return;
