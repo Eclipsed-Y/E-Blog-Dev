@@ -28,5 +28,11 @@ public class CacheConstant {
     public static final String SECOND_COMMENT_PAGE = "secondCommentPage";
     public static final Integer SECOND_COMMENT_PAGE_MIN_TTL = 180000;  // 3分钟
     public static final Integer SECOND_COMMENT_PAGE_MAX_TTL = 300000;  // 5分钟
+    public static final String LIKED = "liked";
+    public static final Integer LIKED_MIN_TTL = 180000;  // 3分钟
+    public static final Integer LIKED_MAX_TTL = 300000;  // 5分钟
+    public static final String LIKE_COUNT = "likeCount";
+    public static final Integer LIKE_COUNT_MIN_TTL = 1200000;  // 20分钟
+    public static final Integer LIKE_COUNT_MAX_TTL = 1800000;  // 30分钟
 
 }
