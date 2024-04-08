@@ -9,8 +9,8 @@
 继承RedisCacheManager、RedisCache类，重写两个类的部分方法，实现Redis基于SpringCache的随机过期时间缓存，应对缓存雪崩
 
 使用旁路缓存模式，针对分页缓存自定义RedisUtil类删除缓存
-## 配置中心
-nacos
+## 注册配置中心
+Nacos作为注册和配置中心
 
 ## 服务架构
 ### 1. 网关 gateway
@@ -40,7 +40,9 @@ nacos
 
 redis中点赞数据和是否点赞均设置随机过期时间，如果过期，则无需修改redis，下次刷新页面将从数据库读取到缓存
 
-使用redis的lua脚本、rabbitmq实现点赞功能实时更新redis（未过期时）并异步写入数据库，同时新增redisCacheManager修改序列化规则，防止redis无法获取到数字
+使用redis的lua脚本、rabbitmq实现点赞功能实时更新redis（未过期时）并异步写入数据库
+
+额外启动一个RedisCacheManager修改序列化规则，防止redis无法获取到数字
 
 ## 分布式
 ### 使用Feign内部调用
