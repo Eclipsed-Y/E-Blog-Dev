@@ -11,7 +11,7 @@
  Target Server Version : 80027 (8.0.27)
  File Encoding         : 65001
 
- Date: 06/04/2024 16:43:59
+ Date: 09/04/2024 01:09:48
 */
 
 SET NAMES utf8mb4;
@@ -49,10 +49,10 @@ INSERT INTO `article` VALUES (6, 4, '测试专员', 'http://dummyimage.com/100x1
 INSERT INTO `article` VALUES (7, 1, '管理员', '', '这是第五篇测试文章', '', 1, 1, 0, 0, 1, 0, '2024-04-01 01:16:27', '2024-04-01 01:16:28');
 INSERT INTO `article` VALUES (8, 4, '测试专员', 'http://dummyimage.com/100x100', '这是一篇测试暂存的文章', '这是一篇测试暂存的文章', 1, 1, 0, 0, -1, 0, '2024-04-02 16:41:37', '2024-04-02 16:41:37');
 INSERT INTO `article` VALUES (12, 4, '测试专员', 'http://dummyimage.com/100x100', '这是第二篇测试暂存的文章', '这是第二篇测试暂存的文章', 1, 1, 0, 0, -1, 0, '2024-04-02 16:52:29', '2024-04-02 16:52:29');
-INSERT INTO `article` VALUES (15, 1, '管理员', '', '需习集产技联长', 'dolor', 3, 1, 1, 0, 1, 1, '2024-04-03 17:57:30', '2024-04-03 17:57:30');
+INSERT INTO `article` VALUES (15, 1, '管理员', '', '需习集产技联长', 'dolor', 3, 1, 1, 0, 1, 0, '2024-04-03 17:57:30', '2024-04-03 17:57:30');
 INSERT INTO `article` VALUES (19, 1, '管理员', '', '农再主铁便', 'laborum elit enim eu', 1, 1, 1, 0, 1, 0, '2024-04-03 18:47:58', '2024-04-03 18:47:58');
-INSERT INTO `article` VALUES (20, 4, '测试专员', 'http://dummyimage.com/100x100', '测试分布式事务', '测试分布式事务', 1, 1, 0, 0, 1, 1, '2024-04-05 23:42:45', '2024-04-05 23:42:45');
-INSERT INTO `article` VALUES (22, 108, 'TomTom', 'http://dummyimage.com/100x100', '猫和老鼠（改）', 'laboris cupidatat cillum est', 3, 1, 0, 0, 1, 1, '2024-04-06 16:23:24', '2024-04-06 16:23:24');
+INSERT INTO `article` VALUES (20, 4, '测试专员', 'http://dummyimage.com/100x100', '测试分布式事务', '测试分布式事务', 1, 1, 0, 0, 1, 0, '2024-04-05 23:42:45', '2024-04-05 23:42:45');
+INSERT INTO `article` VALUES (22, 108, 'TomTom', 'http://dummyimage.com/100x100', '猫和老鼠', 'laboris cupidatat cillum est', 1, 0, 0, 0, 1, 0, '2024-04-06 16:23:24', '2024-04-06 16:23:24');
 
 -- ----------------------------
 -- Table structure for article_detail
@@ -80,10 +80,10 @@ INSERT INTO `article_detail` VALUES (4, 6, 0, '这是第四篇文章的正文', 
 INSERT INTO `article_detail` VALUES (5, 7, 0, '这是第五篇文章的正文', 0, '2024-04-01 16:29:16', '2024-04-01 16:29:16');
 INSERT INTO `article_detail` VALUES (6, 8, 0, 'in Ut magna quis Excepteur', 0, '2024-04-02 16:41:37', '2024-04-02 16:41:37');
 INSERT INTO `article_detail` VALUES (10, 12, 0, 'qrt Ut dahte hfn Edspttre', 0, '2024-04-02 16:52:29', '2024-04-02 16:52:29');
-INSERT INTO `article_detail` VALUES (13, 15, 0, 'do cillum ut aliqua incididunt', 1, '2024-04-03 17:57:30', '2024-04-03 17:57:30');
+INSERT INTO `article_detail` VALUES (13, 15, 0, 'do cillum ut aliqua incididunt', 0, '2024-04-03 17:57:30', '2024-04-03 17:57:30');
 INSERT INTO `article_detail` VALUES (17, 19, 0, 'laboris dolor sunt sint', 0, '2024-04-03 18:47:58', '2024-04-03 18:47:58');
-INSERT INTO `article_detail` VALUES (18, 20, 0, 'ex incididunt est ipsum dolor', 1, '2024-04-05 23:42:46', '2024-04-05 23:42:46');
-INSERT INTO `article_detail` VALUES (20, 22, 1, 'et Ut culpa veniam ut', 1, '2024-04-06 16:23:24', '2024-04-06 16:23:24');
+INSERT INTO `article_detail` VALUES (18, 20, 0, 'ex incididunt est ipsum dolor', 0, '2024-04-05 23:42:46', '2024-04-05 23:42:46');
+INSERT INTO `article_detail` VALUES (20, 22, 11, 'et Ut culpa veniam ut', 0, '2024-04-06 16:23:24', '2024-04-06 16:23:24');
 
 -- ----------------------------
 -- Table structure for article_tag
@@ -98,7 +98,7 @@ CREATE TABLE `article_tag`  (
   `update_time` datetime NOT NULL,
   `tag_name` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '' COMMENT 'tag名称',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 35 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 65 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of article_tag
@@ -116,16 +116,16 @@ INSERT INTO `article_tag` VALUES (11, 8, 2, 0, '2024-04-02 16:41:38', '2024-04-0
 INSERT INTO `article_tag` VALUES (12, 12, 1, 0, '2024-04-02 16:52:29', '2024-04-02 16:52:29', 'Java');
 INSERT INTO `article_tag` VALUES (13, 12, 3, 0, '2024-04-02 16:52:29', '2024-04-02 16:52:29', 'C++');
 INSERT INTO `article_tag` VALUES (14, 12, 2, 0, '2024-04-02 16:52:29', '2024-04-02 16:52:29', 'Python');
-INSERT INTO `article_tag` VALUES (21, 15, 1, 1, '2024-04-03 17:57:30', '2024-04-03 17:57:30', 'Java');
-INSERT INTO `article_tag` VALUES (22, 15, 2, 1, '2024-04-03 17:57:30', '2024-04-03 17:57:30', 'Python');
-INSERT INTO `article_tag` VALUES (23, 15, 3, 1, '2024-04-03 17:57:30', '2024-04-03 17:57:30', 'C++');
+INSERT INTO `article_tag` VALUES (21, 15, 1, 0, '2024-04-03 17:57:30', '2024-04-03 17:57:30', 'Java');
+INSERT INTO `article_tag` VALUES (22, 15, 2, 0, '2024-04-03 17:57:30', '2024-04-03 17:57:30', 'Python');
+INSERT INTO `article_tag` VALUES (23, 15, 3, 0, '2024-04-03 17:57:30', '2024-04-03 17:57:30', 'C++');
 INSERT INTO `article_tag` VALUES (24, 19, 1, 0, '2024-04-03 18:47:58', '2024-04-03 18:47:58', 'Java');
 INSERT INTO `article_tag` VALUES (25, 19, 2, 0, '2024-04-03 18:47:58', '2024-04-03 18:47:58', 'Python');
 INSERT INTO `article_tag` VALUES (26, 19, 3, 0, '2024-04-03 18:47:58', '2024-04-03 18:47:58', 'C++');
-INSERT INTO `article_tag` VALUES (27, 20, 1, 1, '2024-04-05 23:42:46', '2024-04-05 23:42:46', 'Java');
-INSERT INTO `article_tag` VALUES (32, 22, 2, 1, '2024-04-06 16:24:23', '2024-04-06 16:24:23', 'Python');
-INSERT INTO `article_tag` VALUES (33, 22, 3, 1, '2024-04-06 16:24:23', '2024-04-06 16:24:23', 'C++');
-INSERT INTO `article_tag` VALUES (34, 22, 1, 1, '2024-04-06 16:24:23', '2024-04-06 16:24:23', 'Java');
+INSERT INTO `article_tag` VALUES (27, 20, 1, 0, '2024-04-05 23:42:46', '2024-04-05 23:42:46', 'Java');
+INSERT INTO `article_tag` VALUES (62, 22, 2, 0, '2024-04-07 23:08:10', '2024-04-07 23:08:10', 'Python');
+INSERT INTO `article_tag` VALUES (63, 22, 3, 0, '2024-04-07 23:08:10', '2024-04-07 23:08:10', 'C++');
+INSERT INTO `article_tag` VALUES (64, 22, 1, 0, '2024-04-07 23:08:10', '2024-04-07 23:08:10', 'Java');
 
 -- ----------------------------
 -- Table structure for category
@@ -167,27 +167,50 @@ CREATE TABLE `comment`  (
   `create_time` datetime NOT NULL,
   `update_time` datetime NOT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 47 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 52 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of comment
 -- ----------------------------
-INSERT INTO `comment` VALUES (1, 20, 4, '测试专员', 'http://dummyimage.com/100x100', 0, 0, '评论1', 1, '2024-04-05 23:45:45', '2024-04-05 23:45:45');
-INSERT INTO `comment` VALUES (32, 20, 4, '测试专员', 'http://dummyimage.com/100x100', 0, 0, '评论22', 1, '2024-04-05 23:47:32', '2024-04-05 23:47:32');
-INSERT INTO `comment` VALUES (33, 20, 4, '测试专员', 'http://dummyimage.com/100x100', 0, 0, '评论22', 1, '2024-04-05 23:47:33', '2024-04-05 23:47:33');
-INSERT INTO `comment` VALUES (34, 20, 4, '测试专员', 'http://dummyimage.com/100x100', 1, 0, '评论22', 1, '2024-04-05 23:47:38', '2024-04-05 23:47:38');
-INSERT INTO `comment` VALUES (35, 20, 4, '测试专员', 'http://dummyimage.com/100x100', 1, 34, '评论22', 1, '2024-04-05 23:48:01', '2024-04-05 23:48:01');
-INSERT INTO `comment` VALUES (36, 22, 108, 'TomTom', 'http://dummyimage.com/100x100', 0, 0, 'in et', 1, '2024-04-06 16:24:59', '2024-04-06 16:24:59');
-INSERT INTO `comment` VALUES (37, 22, 108, 'TomTom', 'http://dummyimage.com/100x100', 0, 0, 'in et', 1, '2024-04-06 16:25:00', '2024-04-06 16:25:00');
-INSERT INTO `comment` VALUES (38, 22, 108, 'TomTom', 'http://dummyimage.com/100x100', 0, 0, 'in et', 1, '2024-04-06 16:25:01', '2024-04-06 16:25:01');
-INSERT INTO `comment` VALUES (39, 22, 108, 'TomTom', 'http://dummyimage.com/100x100', 0, 0, 'in et', 1, '2024-04-06 16:25:01', '2024-04-06 16:25:01');
-INSERT INTO `comment` VALUES (40, 22, 108, 'TomTom', 'http://dummyimage.com/100x100', 0, 0, 'in et', 1, '2024-04-06 16:25:02', '2024-04-06 16:25:02');
-INSERT INTO `comment` VALUES (41, 22, 108, 'TomTom', 'http://dummyimage.com/100x100', 40, 0, 'agf', 1, '2024-04-06 16:25:30', '2024-04-06 16:25:30');
-INSERT INTO `comment` VALUES (42, 22, 108, 'TomTom', 'http://dummyimage.com/100x100', 40, 0, 'agf', 1, '2024-04-06 16:25:30', '2024-04-06 16:25:30');
-INSERT INTO `comment` VALUES (43, 22, 108, 'TomTom', 'http://dummyimage.com/100x100', 40, 0, 'agf', 1, '2024-04-06 16:25:31', '2024-04-06 16:25:31');
-INSERT INTO `comment` VALUES (44, 22, 108, 'TomTom', 'http://dummyimage.com/100x100', 40, 41, 'gdfdfgdfhgfj sunt reprehenderit', 1, '2024-04-06 16:25:34', '2024-04-06 16:25:34');
-INSERT INTO `comment` VALUES (45, 22, 108, 'TomTom', 'http://dummyimage.com/100x100', 40, 44, 'agf', 1, '2024-04-06 16:25:38', '2024-04-06 16:25:38');
+INSERT INTO `comment` VALUES (1, 20, 4, '测试专员', 'http://dummyimage.com/100x100', 0, 0, '评论1', 0, '2024-04-05 23:45:45', '2024-04-05 23:45:45');
+INSERT INTO `comment` VALUES (32, 20, 4, '测试专员', 'http://dummyimage.com/100x100', 0, 0, '评论22', 0, '2024-04-05 23:47:32', '2024-04-05 23:47:32');
+INSERT INTO `comment` VALUES (33, 20, 4, '测试专员', 'http://dummyimage.com/100x100', 0, 0, '评论22', 0, '2024-04-05 23:47:33', '2024-04-05 23:47:33');
+INSERT INTO `comment` VALUES (34, 20, 4, '测试专员', 'http://dummyimage.com/100x100', 1, 0, '评论22', 0, '2024-04-05 23:47:38', '2024-04-05 23:47:38');
+INSERT INTO `comment` VALUES (35, 20, 4, '测试专员', 'http://dummyimage.com/100x100', 1, 34, '评论22', 0, '2024-04-05 23:48:01', '2024-04-05 23:48:01');
+INSERT INTO `comment` VALUES (36, 22, 108, 'TomTom', 'http://dummyimage.com/100x100', 0, 0, 'in et', 0, '2024-04-06 16:24:59', '2024-04-06 16:24:59');
+INSERT INTO `comment` VALUES (37, 22, 108, 'TomTom', 'http://dummyimage.com/100x100', 0, 0, 'in et', 0, '2024-04-06 16:25:00', '2024-04-06 16:25:00');
+INSERT INTO `comment` VALUES (38, 22, 108, 'TomTom', 'http://dummyimage.com/100x100', 0, 0, 'in et', 0, '2024-04-06 16:25:01', '2024-04-06 16:25:01');
+INSERT INTO `comment` VALUES (39, 22, 108, 'TomTom', 'http://dummyimage.com/100x100', 0, 0, 'in et', 0, '2024-04-06 16:25:01', '2024-04-06 16:25:01');
+INSERT INTO `comment` VALUES (40, 22, 108, 'TomTom', 'http://dummyimage.com/100x100', 0, 0, 'gdfdfgdfhgfj sunt reprehenderit', 0, '2024-04-06 16:25:02', '2024-04-06 16:25:02');
+INSERT INTO `comment` VALUES (41, 22, 108, 'TomTom', 'http://dummyimage.com/100x100', 40, 0, 'gdfdfgdfhgfj sunt reprehenderit', 0, '2024-04-06 16:25:30', '2024-04-06 16:25:30');
+INSERT INTO `comment` VALUES (42, 22, 108, 'TomTom', 'http://dummyimage.com/100x100', 40, 0, 'agf', 0, '2024-04-06 16:25:30', '2024-04-06 16:25:30');
+INSERT INTO `comment` VALUES (43, 22, 108, 'TomTom', 'http://dummyimage.com/100x100', 40, 0, 'agf', 0, '2024-04-06 16:25:31', '2024-04-06 16:25:31');
+INSERT INTO `comment` VALUES (44, 22, 108, 'TomTom', 'http://dummyimage.com/100x100', 40, 41, 'gdfdfgdfhgfj sunt reprehenderit', 0, '2024-04-06 16:25:34', '2024-04-06 16:25:34');
+INSERT INTO `comment` VALUES (45, 22, 108, 'TomTom', 'http://dummyimage.com/100x100', 40, 44, 'agf', 0, '2024-04-06 16:25:38', '2024-04-06 16:25:38');
 INSERT INTO `comment` VALUES (46, 22, 108, 'TomTom', 'http://dummyimage.com/100x100', 40, 44, 'agf', 1, '2024-04-06 16:25:39', '2024-04-06 16:25:39');
+INSERT INTO `comment` VALUES (47, 22, 108, 'TomTom', 'http://dummyimage.com/100x100', 0, 0, 'in aliqua et Excepteur', 0, '2024-04-07 19:19:05', '2024-04-07 19:19:05');
+INSERT INTO `comment` VALUES (48, 22, 108, 'TomTom', 'http://dummyimage.com/100x100', 0, 0, 'in aliqua et Excepteur', 0, '2024-04-07 19:19:06', '2024-04-07 19:19:06');
+
+-- ----------------------------
+-- Table structure for like
+-- ----------------------------
+DROP TABLE IF EXISTS `like`;
+CREATE TABLE `like`  (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `user_id` bigint NOT NULL COMMENT '用户id',
+  `article_id` bigint NOT NULL COMMENT '文章id',
+  `status` tinyint NOT NULL DEFAULT 1 COMMENT '点赞状态，1为点赞，-1为取消点赞',
+  `create_time` datetime NOT NULL,
+  `update_time` datetime NOT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `like_pk`(`article_id` ASC, `user_id` ASC) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 8 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '点赞表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of like
+-- ----------------------------
+INSERT INTO `like` VALUES (5, 1, 1, 1, '2024-04-08 08:40:50', '2024-04-08 08:40:50');
+INSERT INTO `like` VALUES (7, 108, 22, 1, '2024-04-08 21:25:58', '2024-04-08 21:25:58');
 
 -- ----------------------------
 -- Table structure for tag
@@ -245,7 +268,7 @@ CREATE TABLE `user`  (
   `deleted` tinyint NOT NULL DEFAULT 0 COMMENT '是否删除',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `username`(`username` ASC) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 109 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 114 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of user
