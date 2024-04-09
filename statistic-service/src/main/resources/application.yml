@@ -1,0 +1,14 @@
+server:
+  port: ${eblog.port}
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+spring:
+  datasource:
+    url: ${eblog.datasource.url}
+    username: ${eblog.datasource.username}
+    password: ${eblog.datasource.password}
+  redis:
+    port: ${eblog.redis.port}
+    host: ${eblog.redis.host}
+    database: ${eblog.redis.database}

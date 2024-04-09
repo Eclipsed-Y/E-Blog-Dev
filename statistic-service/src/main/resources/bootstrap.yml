@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: statistic-service
+  profiles:
+    active: dev
+  cloud:
+    nacos:
+      server-addr: ${eblog.cloud.nacos.server-addr}
+      config:
+        file-extension: yaml

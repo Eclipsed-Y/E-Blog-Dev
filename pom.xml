@@ -15,6 +15,7 @@
         <module>upload-service</module>
         <module>article-service</module>
         <module>activity-service</module>
+        <module>statistic-service</module>
     </modules>
 
     <properties>
