@@ -2,6 +2,7 @@ package cn.ecnu.eblog.article.service.impl;
 
 import cn.ecnu.eblog.article.mapper.ArticleMapper;
 import cn.ecnu.eblog.article.service.*;
+import cn.ecnu.eblog.article.utils.RedisUtil;
 import cn.ecnu.eblog.common.constant.CacheConstant;
 import cn.ecnu.eblog.common.constant.MessageConstant;
 import cn.ecnu.eblog.common.context.BaseContext;
@@ -23,6 +24,7 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.yulichang.base.MPJBaseServiceImpl;
 import com.github.yulichang.query.MPJQueryWrapper;
+import io.lettuce.core.RedisURI;
 import io.seata.spring.annotation.GlobalTransactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -65,6 +67,8 @@ public class ArticleServiceImpl extends MPJBaseServiceImpl<ArticleMapper, Articl
     private CommentClient commentClient;
     @Autowired
     private PlatformTransactionManager platformTransactionManager;
+    @Autowired
+    private RedisUtil redisUtil;
     @Override
     @Cacheable(value = CacheConstant.ARTICLE_PAGE, cacheManager = CacheConstant.CACHE_MANAGER, key = "#articlePageQueryDTO.categoryId + '_' + #articlePageQueryDTO.page + '_' + #articlePageQueryDTO.pageSize + '_' + #articlePageQueryDTO.sortMethod")
     public PageResult getByCategoryId(ArticlePageQueryDTO articlePageQueryDTO) {
@@ -145,7 +149,7 @@ public class ArticleServiceImpl extends MPJBaseServiceImpl<ArticleMapper, Articl
     }
 
     @Override
-    @Caching(evict = {@CacheEvict(value = CacheConstant.ARTICLE_DETAIL, cacheManager = CacheConstant.CACHE_MANAGER, key = "#articleDTO.id"), @CacheEvict(value = CacheConstant.ARTICLE_PAGE, cacheManager = CacheConstant.CACHE_MANAGER, allEntries = true)} )
+    @Caching(evict = {@CacheEvict(value = CacheConstant.ARTICLE_DETAIL, cacheManager = CacheConstant.CACHE_MANAGER, key = "#articleDTO.id"), @CacheEvict(value = CacheConstant.ARTICLE_PAGE, cacheManager = CacheConstant.CACHE_MANAGER, allEntries = true), @CacheEvict(value = CacheConstant.LIKE_COUNT, cacheManager = CacheConstant.CACHE_MANAGER, key = "#articleDTO.id")} )
 //    @CacheEvict(value = CacheConstant.ARTICLE_DETAIL, cacheManager = CacheConstant.CACHE_MANAGER, key = "#articleDTO.id")
     public long updateArticle(ArticleDTO articleDTO) {
         // 判断是否合法
@@ -211,11 +215,13 @@ public class ArticleServiceImpl extends MPJBaseServiceImpl<ArticleMapper, Articl
                 return null;
             }
         });
+        // 删除缓存
+        redisUtil.remove(CacheConstant.LIKED, articleDTO.getId() + "_");
         return articleDTO.getId();
     }
 
     @Override
-    @Caching(evict = {@CacheEvict(value = CacheConstant.ARTICLE_DETAIL, cacheManager = CacheConstant.CACHE_MANAGER, key = "#id"), @CacheEvict(value = CacheConstant.ARTICLE_PAGE, cacheManager = CacheConstant.CACHE_MANAGER, allEntries = true)})
+    @Caching(evict = {@CacheEvict(value = CacheConstant.ARTICLE_DETAIL, cacheManager = CacheConstant.CACHE_MANAGER, key = "#id"), @CacheEvict(value = CacheConstant.ARTICLE_PAGE, cacheManager = CacheConstant.CACHE_MANAGER, allEntries = true), @CacheEvict(value = CacheConstant.LIKE_COUNT, cacheManager = CacheConstant.CACHE_MANAGER, key = "#id")})
     public void deleteArticle(Long id) {
         // 确认用户是否有权限
         ArticleDO origin = articleService.getById(id);
@@ -253,6 +259,8 @@ public class ArticleServiceImpl extends MPJBaseServiceImpl<ArticleMapper, Articl
             platformTransactionManager.rollback(status);
             throw e;
         }
+        // 删除缓存
+        redisUtil.remove(CacheConstant.LIKED, id + "_");
     }
 
     /**

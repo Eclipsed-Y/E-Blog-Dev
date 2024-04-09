@@ -60,8 +60,11 @@ public class LikeServiceImpl extends MPJBaseServiceImpl<LikeMapper, LikeDO> impl
     }
 
     @Override
-    @Cacheable(value = CacheConstant.LIKED, cacheManager = "redisCacheManagerForNums", key = "#likeDTO.userId + '_' + #likeDTO.articleId")
+    @Cacheable(value = CacheConstant.LIKED, cacheManager = "redisCacheManagerForNums", key = "#likeDTO.articleId + '_' + #likeDTO.userId")
     public Integer liked(LikeDTO likeDTO) {
+        if (likeDTO.getArticleId() == null){
+            throw new RequestExcetption(MessageConstant.ILLEGAL_REQUEST);
+        }
         LikeDO likeDO = likeService.getOne(new QueryWrapper<LikeDO>().eq("user_id", likeDTO.getUserId()).eq("article_id", likeDTO.getArticleId()));
         if (likeDO == null){
             return -1;

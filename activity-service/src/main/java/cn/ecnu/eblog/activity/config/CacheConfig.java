@@ -44,6 +44,8 @@ public class CacheConfig {
         HashMap<String, int[]> ttlConfigs = new HashMap<>();
         ttlConfigs.put(CacheConstant.LIKED, new int[]{CacheConstant.LIKED_MIN_TTL, CacheConstant.LIKED_MAX_TTL});
         ttlConfigs.put(CacheConstant.LIKE_COUNT, new int[]{CacheConstant.LIKE_COUNT_MIN_TTL, CacheConstant.LIKE_COUNT_MAX_TTL});
+        ttlConfigs.put(CacheConstant.HAS_ATTENTION, new int[]{CacheConstant.HAS_ATTENTION_MIN_TTL, CacheConstant.HAS_ATTENTION_MAX_TTL});
+        ttlConfigs.put(CacheConstant.ATTENTION_COUNT, new int[]{CacheConstant.ATTENTION_COUNT_MIN_TTL, CacheConstant.ATTENTION_COUNT_MAX_TTL});
         return new RandomTtlRedisCacheManager(cacheWriter, redisCacheConfiguration, CacheConstant.COMMON_MIN_TTL, CacheConstant.COMMON_MAX_TTL, ttlConfigs);
     }
 }

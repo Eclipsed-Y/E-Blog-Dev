@@ -34,5 +34,11 @@ public class CacheConstant {
     public static final String LIKE_COUNT = "likeCount";
     public static final Integer LIKE_COUNT_MIN_TTL = 1200000;  // 20分钟
     public static final Integer LIKE_COUNT_MAX_TTL = 1800000;  // 30分钟
+    public static final String HAS_ATTENTION = "hasAttention";
+    public static final Integer HAS_ATTENTION_MIN_TTL = 180000;  // 3分钟
+    public static final Integer HAS_ATTENTION_MAX_TTL = 300000;  // 5分钟
+    public static final String ATTENTION_COUNT = "attentionCount";
+    public static final Integer ATTENTION_COUNT_MIN_TTL = 1200000;  // 20分钟
+    public static final Integer ATTENTION_COUNT_MAX_TTL = 1800000;  // 30分钟
 
 }

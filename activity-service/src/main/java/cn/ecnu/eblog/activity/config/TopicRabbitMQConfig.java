@@ -44,6 +44,15 @@ public class TopicRabbitMQConfig {
     }
 
     /**
+     * 关注队列
+     * @return
+     */
+    @Bean
+    public Queue attentionQueue(){
+        return QueueBuilder.durable(MQConstant.ATTENTION_QUEUE).deadLetterExchange(MQConstant.DDL_EXCHANGE).ttl(1000).build();
+    }
+
+    /**
      * 评论死信队列
      * @return
      */
@@ -58,6 +67,15 @@ public class TopicRabbitMQConfig {
     @Bean
     public Queue likeDdlQueue() {
         return new Queue(MQConstant.LIKE_DDL_QUEUE, true, false, false);
+    }
+
+    /**
+     * 关注死信队列
+     * @return
+     */
+    @Bean
+    public Queue attentionDdlQueue() {
+        return new Queue(MQConstant.ATTENTION_DDL_QUEUE, true, false, false);
     }
 
     /**
@@ -79,6 +97,15 @@ public class TopicRabbitMQConfig {
     }
 
     /**
+     * 关注binding
+     * @return
+     */
+    @Bean
+    public Binding attentionBindingTopicExchange(){
+        return BindingBuilder.bind(attentionQueue()).to(topicExchange()).with(MQConstant.ATTENTION);
+    }
+
+    /**
      * 评论死信binding
      * @return
      */
@@ -94,6 +121,14 @@ public class TopicRabbitMQConfig {
     @Bean
     public Binding likeBindingDdlExchange() {
         return BindingBuilder.bind(likeDdlQueue()).to(ddlExchange()).with(MQConstant.LIKE);
+    }
+    /**
+     * 关注死信binding
+     * @return
+     */
+    @Bean
+    public Binding attentionBindingDdlExchange() {
+        return BindingBuilder.bind(attentionDdlQueue()).to(ddlExchange()).with(MQConstant.ATTENTION);
     }
 
 }
